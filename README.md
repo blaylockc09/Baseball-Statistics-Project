@@ -15,3 +15,14 @@
 * When the file is read, it should produce a report that lists the statistics for all batters in that game, and calculates the batting average, total bases, slugging percentage, and on-base percentage for each batter. The report should be saved in a file in a format for printing.
 * There should also be a program that will read multiple game files and summarize the statistics on each batter for a specified number of games.
 
+
+### Deadlines ###
+
+#### Week1 ####
+* Initial code assignment deadline (who's writing each piece of code).  This should be within a couple of days and included in the first weekly status report.
+#### Week2 #### 
+* Make adjustments/corrections, then ask for comments from the other team. I suggest giving the other team a runable module and ask for feedback as to bug reports, improvements, clearifications, likes and dislikes.
+* Make adjustments/corrections and clean up for final version.
+#### Week3 ####
+* Final comments/updates of team project from everyone.
+* Final comments/updates from team members.
