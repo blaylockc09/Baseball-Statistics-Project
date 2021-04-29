@@ -18,6 +18,7 @@ public class Homepage extends JPanel {
 	private JButton addStats;
 	private JButton viewStats;
 	private JButton Quit;
+        private FileClass file = new FileClass();
 	
 	public Homepage()
 	{
@@ -79,7 +80,14 @@ public class Homepage extends JPanel {
 			}
 			if(source==Quit)
 			{
-				System.exit(0);
+                                if(file.saveAll(BaseBallApp.playerList)){
+                                    System.out.println("Data saved to file");
+                                    System.exit(0);
+                                } else {
+                                    System.out.println("Something went wrong saving the data to the file");
+                                    System.exit(0);
+                                }
+				
 			}
 		}
 	}
