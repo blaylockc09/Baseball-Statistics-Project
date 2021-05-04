@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +21,7 @@ import javax.swing.*;
 public class BaseballApp extends JFrame{
     // instance variables
     private JTextField nameField;
+    private JTextField dateField;
     private JTextField abField;
     private JTextField rField;
     private JTextField hField;
@@ -30,7 +32,7 @@ public class BaseballApp extends JFrame{
     private JTextField aField;
     private JTextField lobField;
     private JTextArea statsTextArea;
-    private FileClass file = new FileClass();
+    //private FileClass file = new FileClass();
     private JList b;
     String gameSelected = "";
     
@@ -176,13 +178,33 @@ public class BaseballApp extends JFrame{
     
     // this method gets executed when the "Insert Data" button is clicked in the Insert Stats frame
     private void insertDataButtonClicked() {
+        Batter player = new Batter();
+        String[] name = nameField.getText().split(" ");
+        String firstName = name[0];
+        String lastName = name[1];
         
+        player.setFirstName(firstName);
+        player.setLastName(lastName);
+        player.setDateOfGame(dateField.getText());
+        player.setab(Integer.parseInt(abField.getText()));
+        player.setr(Integer.parseInt(rField.getText()));
+        player.seth(Integer.parseInt(hField.getText()));
+        player.setrbi(Integer.parseInt(rbiField.getText()));
+        player.setbb(Integer.parseInt(bbField.getText()));
+        player.setso(Integer.parseInt(soField.getText()));
+        player.setpo(Integer.parseInt(poField.getText()));
+        player.seta(Integer.parseInt(aField.getText()));
+        player.setlob(Integer.parseInt(lobField.getText()));
+        
+        FileClass file = new FileClass(player);
+        file.save(player);
     }
     
     // this method gets executed when the Clear button in the Insert Stats frame is clicked
     private void clearButtonClicked() {
         // clears all the text fields
         nameField.setText("");
+        dateField.setText("");
         abField.setText("");
         rField.setText("");
         hField.setText("");
@@ -210,6 +232,7 @@ public class BaseballApp extends JFrame{
         
         // Instance variable taht creates text fields
         nameField = new JTextField();
+        dateField = new JTextField();
         abField = new JTextField();
         rField = new JTextField();
         hField = new JTextField();
@@ -223,6 +246,7 @@ public class BaseballApp extends JFrame{
         // sets the size of the text fields
         Dimension dim = new Dimension(180, 20);
         nameField.setPreferredSize(dim);
+        dateField.setPreferredSize(dim);
         abField.setPreferredSize(dim);
         rField.setPreferredSize(dim);
         hField.setPreferredSize(dim);
@@ -232,7 +256,9 @@ public class BaseballApp extends JFrame{
         poField.setPreferredSize(dim);
         aField.setPreferredSize(dim);
         lobField.setPreferredSize(dim);
+        
         nameField.setMinimumSize(dim);
+        dateField.setMinimumSize(dim);
         abField.setMinimumSize(dim);
         rField.setMinimumSize(dim);
         hField.setMinimumSize(dim);
@@ -266,26 +292,28 @@ public class BaseballApp extends JFrame{
         // main panel
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
-        panel.add(new JLabel("Name:"), getConstraints(0, 0));
+        panel.add(new JLabel("Name(First Last):"), getConstraints(0, 0));
         panel.add(nameField, getConstraints(1, 0));
-        panel.add(new JLabel("At Bat:"), getConstraints(0, 1));
-        panel.add(abField, getConstraints(1, 1));
-        panel.add(new JLabel("Runs:"), getConstraints(0, 2));
-        panel.add(rField, getConstraints(1, 2));
-        panel.add(new JLabel("Hits:"), getConstraints(0, 3));
-        panel.add(hField, getConstraints(1, 3));    
-        panel.add(new JLabel("Runs Batted In:"), getConstraints(0, 4));
-        panel.add(rbiField, getConstraints(1, 4)); 
-        panel.add(new JLabel("Walk:"), getConstraints(0, 5));
-        panel.add(bbField, getConstraints(1, 5)); 
-        panel.add(new JLabel("Strikeout:"), getConstraints(0, 6));
-        panel.add(soField, getConstraints(1, 6)); 
-        panel.add(new JLabel("Putout:"), getConstraints(0, 7));
-        panel.add(poField, getConstraints(1, 7)); 
-        panel.add(new JLabel("Assist:"), getConstraints(0, 8));
-        panel.add(aField, getConstraints(1, 8)); 
-        panel.add(new JLabel("Left on Base:"), getConstraints(0, 9));
-        panel.add(lobField, getConstraints(1, 9)); 
+        panel.add(new JLabel("Date(year-mm-dd):"), getConstraints(0, 1));
+        panel.add(dateField, getConstraints(1, 1));
+        panel.add(new JLabel("At Bat:"), getConstraints(0, 2));
+        panel.add(abField, getConstraints(1, 2));
+        panel.add(new JLabel("Runs:"), getConstraints(0, 3));
+        panel.add(rField, getConstraints(1, 3));
+        panel.add(new JLabel("Hits:"), getConstraints(0, 4));
+        panel.add(hField, getConstraints(1, 4));    
+        panel.add(new JLabel("Runs Batted In:"), getConstraints(0, 5));
+        panel.add(rbiField, getConstraints(1, 5)); 
+        panel.add(new JLabel("Walk:"), getConstraints(0, 6));
+        panel.add(bbField, getConstraints(1, 6)); 
+        panel.add(new JLabel("Strikeout:"), getConstraints(0, 7));
+        panel.add(soField, getConstraints(1, 7)); 
+        panel.add(new JLabel("Putout:"), getConstraints(0, 8));
+        panel.add(poField, getConstraints(1, 8)); 
+        panel.add(new JLabel("Assist:"), getConstraints(0, 9));
+        panel.add(aField, getConstraints(1, 9)); 
+        panel.add(new JLabel("Left on Base:"), getConstraints(0, 10));
+        panel.add(lobField, getConstraints(1, 10)); 
 
         // adds the textField panel and the button panel in the specified position
         add(panel, BorderLayout.CENTER);
