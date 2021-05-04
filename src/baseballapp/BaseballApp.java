@@ -4,8 +4,16 @@ Date: 05/03/2021
 */
 
 package baseballapp;
+import static baseballapp.FileClass.games;
 import java.awt.*;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 // BaseballApp class extends the JFrame Class
@@ -22,6 +30,9 @@ public class BaseballApp extends JFrame{
     private JTextField aField;
     private JTextField lobField;
     private JTextArea statsTextArea;
+    private FileClass file = new FileClass();
+    private JList b;
+    String gameSelected = "";
     
     // sets the look of the window same as the current operating system
     public BaseballApp() {
@@ -124,7 +135,6 @@ public class BaseballApp extends JFrame{
     
     // this method gets executed when the "Read Stats" button is clicked
     private void readButtonClicked() {
-        // calls the insertData method 
         readData();           
     }
     
@@ -146,13 +156,21 @@ public class BaseballApp extends JFrame{
     *  both, the insert stats frame and in the read stats frame
     */
     private void fileButtonClicked() {
+        
         // creates a file chooser
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
+            //ArrayList<String> batter = new ArrayList<>();
+            
+            
             File selectedFile = fileChooser.getSelectedFile();
-            System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+            
+            String selectedFileName = selectedFile.getName();
+            
+            
+            System.out.println("Selected file: " + selectedFileName);
         }
     }
     
@@ -282,7 +300,8 @@ public class BaseballApp extends JFrame{
     
     // creates a frame that is used to read the data from a file
     private void readData() {
-        // creates a frame
+             
+    // creates a frame
         JFrame readFrame= new JFrame();
         setTitle("Read Stats");
         readFrame.setDefaultCloseOperation(readFrame.EXIT_ON_CLOSE);
@@ -292,10 +311,18 @@ public class BaseballApp extends JFrame{
         JButton readDataButton = new JButton("Read Data");
         JButton clearButton = new JButton("Clear");
         JButton exitButton = new JButton("Exit");
-
+        JList gamesList = new JList();
         // attaches the action listener to the buttons
         fileButton.addActionListener(e -> fileButtonClicked());
-        readDataButton.addActionListener(e -> insertDataButtonClicked());
+        readDataButton.addActionListener(e -> {
+            try {
+                
+                readFileButtonClicked();
+                
+            } catch (IOException ex) {
+                Logger.getLogger(BaseballApp.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         clearButton.addActionListener(e -> clearDataButtonClicked());
         exitButton.addActionListener(e -> dispose());
 
@@ -309,15 +336,38 @@ public class BaseballApp extends JFrame{
         
         // creates a panel for the text area
         JPanel panel = new JPanel();
-        Dimension itemDim = new Dimension(150, 1500);
+        Dimension itemDim = new Dimension(1500, 1500);
         statsTextArea = new JTextArea(17,35);
         statsTextArea.setLineWrap(true);
         statsTextArea.setWrapStyleWord(true);
         statsTextArea.setEditable(false); // sets the text area to not editable
         statsTextArea.setPreferredSize(itemDim);
         statsTextArea.setMinimumSize(itemDim);
+        games = new ArrayList<>();
+        
+        File folder = new File("./games");
+        String[] pathnames;
+        
+        pathnames = folder.list();
+        for (String pathname : pathnames) {
+            // Print the names of files and directories          
+            games.add(pathname);
+        }
+         
+        
+        
+        b = new JList(games.toArray());
+        b.setPreferredSize(new Dimension(200, 200));
+        b.setSelectedIndex(0);
+        panel.add(b);
+        
+        gameSelected =  "./games/" + b.getSelectedValue().toString();
+        
+        System.out.println(gameSelected);
+        
         // creates a scroll pane and adds it to the statsTextArea
-        JScrollPane scroll = new JScrollPane(statsTextArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        
+        JScrollPane scroll = new JScrollPane(b, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         panel.add(scroll);
 
         // adds the above text area and button panel to the specified position
@@ -326,15 +376,34 @@ public class BaseballApp extends JFrame{
         
         // displays the window in the center 
         setLocationRelativeTo(null);
-        setSize(new Dimension(390, 380));
+        setSize(new Dimension(490, 380));
         setVisible(true);
         pack();
+        
+        
+        
+
     }
+    
+    
     
     // main method that calls the BaseballApp class and launches the GUI
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
             new BaseballApp();           
         });
+        
     }    
-}
+    
+    
+    private void readFileButtonClicked() throws FileNotFoundException, IOException {
+        String selectedFile = "./games/" + (String) b.getSelectedValue();
+        try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
+                int i;
+                while ((i=br.read()) != -1){
+                    System.out.print((char) i);
+                } 
+            }
+        }
+    }
+
