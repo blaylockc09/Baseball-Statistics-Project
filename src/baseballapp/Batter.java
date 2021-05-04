@@ -5,6 +5,7 @@ public class Batter
     String lastName;
     private String firstName;
     private String position;
+    private String dateOfGame;
     private int ab;
     private int r; 
     private int h; 
@@ -16,14 +17,15 @@ public class Batter
     private int lob; 
 
     public Batter(){
-        this("","","",0,0,0,0,0,0,0,0,0);
+        this("","","","",0,0,0,0,0,0,0,0,0);
     }
 
 
-    public Batter(String lastName,String firstName,String position,int ab,int r,int h,int rbi,int bb, int so, int po, int a, int lob){
+    public Batter(String lastName,String firstName,String position,String dateOfGame,int ab,int r,int h,int rbi,int bb, int so, int po, int a, int lob){
         this.lastName = lastName;
         this.firstName = firstName;
         this.position = position;
+        this.dateOfGame = dateOfGame;
         this.ab = ab;
         this.r = r;
         this.h = h;
@@ -47,7 +49,7 @@ public class Batter
     
     public void setFirstName(String firstName) 
     {
-        this.lastName = firstName;
+        this.firstName = firstName;
     }
     
     public String getFirstName()
@@ -55,9 +57,19 @@ public class Batter
         return firstName;
     }
     
+    public void setDateOfGame(String dateOfGame)
+    {
+        this.dateOfGame = dateOfGame;
+    }
+    
+    public String getDateOfGame()
+    {
+        return dateOfGame;
+    }
+    
     public void setPosition(String position) 
     {
-        this.lastName = position;
+        this.position = position;
     }
     
     public String getPosition()
@@ -65,9 +77,9 @@ public class Batter
         return position;
     }
     
-    public void setab(String ab) 
+    public void setab(int ab) 
     {
-        this.lastName = ab;
+        this.ab = ab;
     }
       
     public int getab()
