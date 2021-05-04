@@ -10,11 +10,11 @@ public class FileClass {
     private List<Batter> playerStats = null;
     private Path playerStatsPath = null;
     private File playerStatsFile = null;
-    private final int FIELD_SEP = 24;
+    private final int FIELD_SEP = 18;
     String[] pathnames;
     public static List<String> games = new ArrayList<>();
     
-    public FileClass(){
+    public FileClass(Batter player){
         File folder = new File("./games");
         
         
@@ -24,9 +24,11 @@ public class FileClass {
             games.add(pathname);
         }
         
-        //System.out.println(games);
+        //checking if the file with the correct date of today or the players game date 
+        //in the folder and if not creating a file for that date 
         LocalDate filename = LocalDate.now();
-        playerStatsPath = Paths.get(folder + "/" + filename + ".txt");
+        LocalDate playerGameDate = LocalDate.parse(player.getDateOfGame());
+        playerStatsPath = Paths.get(folder + "/" + playerGameDate + ".txt");
         
         try {
             if(Files.notExists(playerStatsPath)){
@@ -48,22 +50,24 @@ public class FileClass {
     }
     
     //saves all of the information that was created into the list 
-    public boolean saveAll(List<Batter> playerList){
+    public boolean save(Batter player){
         try(PrintWriter out = new PrintWriter(
                               new BufferedWriter(
                               new FileWriter(playerStatsFile, true)))) {
-            //Writing the stats in the list to the file 
-            LocalDate currentDate = LocalDate.now();
-            out.println(currentDate);
             StringBuilder list = new StringBuilder();
-            for(Batter p : playerList){
-                list.append(StringUtil.pad(p.getLastName(),FIELD_SEP));
-                list.append(StringUtil.pad(Integer.toString(p.getab()), FIELD_SEP));
-                list.append(StringUtil.pad(Integer.toString(p.geth()), FIELD_SEP));
-                list.append(StringUtil.pad(Integer.toString(p.getrbi()), FIELD_SEP));
-                list.append(StringUtil.pad(Integer.toString(p.getr()), FIELD_SEP));
-                
-            }
+            
+            list.append(StringUtil.pad(player.getFirstName(),FIELD_SEP));
+            list.append(StringUtil.pad(player.getLastName(),FIELD_SEP));
+            list.append(StringUtil.pad(Integer.toString(player.getab()), FIELD_SEP));
+            list.append(StringUtil.pad(Integer.toString(player.getr()), FIELD_SEP));
+            list.append(StringUtil.pad(Integer.toString(player.geth()), FIELD_SEP));
+            list.append(StringUtil.pad(Integer.toString(player.getrbi()), FIELD_SEP));
+            list.append(StringUtil.pad(Integer.toString(player.getbb()), FIELD_SEP));
+            list.append(StringUtil.pad(Integer.toString(player.getso()), FIELD_SEP));
+            list.append(StringUtil.pad(Integer.toString(player.getpo()), FIELD_SEP));
+            list.append(StringUtil.pad(Integer.toString(player.geta()), FIELD_SEP));
+            list.append(StringUtil.pad(Integer.toString(player.getlob()), FIELD_SEP));
+            
             out.println(list);
             out.close();
             return true;
