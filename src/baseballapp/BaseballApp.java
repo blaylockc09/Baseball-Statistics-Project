@@ -244,13 +244,18 @@ public class test extends JFrame{
         }
     }
     
+    // reads a file when the Read File button is clicked
     private void readFileButtonClicked() throws FileNotFoundException, IOException {
         String selectedFile = "./games/" + (String) b.getSelectedValue();
-        try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
-            int i;
-            while ((i=br.read()) != -1){
-                System.out.print((char) i);
+        BufferedReader br = new BufferedReader(new FileReader(selectedFile));
+        try {
+            String i;
+            while ((i = br.readLine()) != null){  
+                // displays the content of the file into an option pane
+                JOptionPane.showMessageDialog(null, i, (String) b.getSelectedValue(), JOptionPane.INFORMATION_MESSAGE);
             } 
+        } finally { // closes the file after it is being readed
+            br.close();
         }
     }
     
@@ -468,13 +473,13 @@ public class test extends JFrame{
             games.add(pathname);
         }     
         b = new JList(games.toArray());
-        b.setPreferredSize(new Dimension(200, 200));
+        b.setPreferredSize(new Dimension(300, 200));
         b.setSelectedIndex(0);
         panel.add(b);
         
         gameSelected =  "./games/" + b.getSelectedValue().toString();
         
-        System.out.println(gameSelected);
+        //System.out.println(gameSelected);
         
         // creates a scroll pane and adds it to the statsTextArea
         
