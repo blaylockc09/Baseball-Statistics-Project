@@ -237,7 +237,7 @@ public class test extends JFrame{
             player.seta(Integer.parseInt(aField.getText()));
             player.setlob(Integer.parseInt(lobField.getText()));
             player.setSf(Integer.parseInt(sfField.getText()));
-            player.sethbp(Integer.parseInt(hbpField.getText()));
+            player.setHbp(Integer.parseInt(hbpField.getText()));
 
             FileClass file = new FileClass(player);
             file.save(player);
