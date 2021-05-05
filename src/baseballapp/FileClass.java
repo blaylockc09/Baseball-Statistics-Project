@@ -10,7 +10,8 @@ public class FileClass {
     private List<Batter> playerStats = null;
     private Path playerStatsPath = null;
     private File playerStatsFile = null;
-    private final int FIELD_SEP = 18;
+    private final int FIELD_SPACE = 18;
+    private final String FIELD_SEP = ",";//added field seperator to make reading from the file easier -KJC 5/5
     String[] pathnames;
     public static List<String> games = new ArrayList<>();
     
@@ -56,17 +57,19 @@ public class FileClass {
                               new FileWriter(playerStatsFile, true)))) {
             StringBuilder list = new StringBuilder();
             
-            list.append(StringUtil.pad(player.getFirstName(),FIELD_SEP));
-            list.append(StringUtil.pad(player.getLastName(),FIELD_SEP));
-            list.append(StringUtil.pad(Integer.toString(player.getab()), FIELD_SEP));
-            list.append(StringUtil.pad(Integer.toString(player.getr()), FIELD_SEP));
-            list.append(StringUtil.pad(Integer.toString(player.geth()), FIELD_SEP));
-            list.append(StringUtil.pad(Integer.toString(player.getrbi()), FIELD_SEP));
-            list.append(StringUtil.pad(Integer.toString(player.getbb()), FIELD_SEP));
-            list.append(StringUtil.pad(Integer.toString(player.getso()), FIELD_SEP));
-            list.append(StringUtil.pad(Integer.toString(player.getpo()), FIELD_SEP));
-            list.append(StringUtil.pad(Integer.toString(player.geta()), FIELD_SEP));
-            list.append(StringUtil.pad(Integer.toString(player.getlob()), FIELD_SEP));
+            //Added field separator to make reading the file easier for report class - KJC 5/5
+            list.append(StringUtil.pad(player.getFirstName(),FIELD_SEP,FIELD_SPACE));
+            list.append(StringUtil.pad(player.getLastName(),FIELD_SEP,FIELD_SPACE));
+            list.append(StringUtil.pad(Integer.toString(player.getab()), FIELD_SEP,FIELD_SPACE));
+            list.append(StringUtil.pad(Integer.toString(player.getr()), FIELD_SEP,FIELD_SPACE));
+            list.append(StringUtil.pad(Integer.toString(player.geth()), FIELD_SEP,FIELD_SPACE));
+            list.append(StringUtil.pad(Integer.toString(player.getrbi()), FIELD_SEP,FIELD_SPACE));
+            list.append(StringUtil.pad(Integer.toString(player.getbb()), FIELD_SEP,FIELD_SPACE));
+            list.append(StringUtil.pad(Integer.toString(player.getso()), FIELD_SEP,FIELD_SPACE));
+            list.append(StringUtil.pad(Integer.toString(player.getpo()), FIELD_SEP,FIELD_SPACE));
+            list.append(StringUtil.pad(Integer.toString(player.geta()), FIELD_SEP,FIELD_SPACE));
+            list.append(StringUtil.pad(Integer.toString(player.getlob()), "",FIELD_SPACE));
+            //
             
             out.println(list);
             out.close();
