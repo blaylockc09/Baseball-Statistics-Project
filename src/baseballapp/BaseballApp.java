@@ -158,46 +158,87 @@ public class BaseballApp extends JFrame{
     *  both, the insert stats frame and in the read stats frame
     */
     private void fileButtonClicked() {
-        
         // creates a file chooser
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        // sets the default directory to the current directory
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+        // adds another options that allows to choose only .txt files
+        FileNameExtensionFilter restrict = new FileNameExtensionFilter("Only .txt files", "txt");
+        fileChooser.setFileFilter(restrict);
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             //ArrayList<String> batter = new ArrayList<>();
-            
-            
-            File selectedFile = fileChooser.getSelectedFile();
-            
-            String selectedFileName = selectedFile.getName();
-            
-            
+            File selectedFile = fileChooser.getSelectedFile();            
+            String selectedFileName = selectedFile.getName();                    
             System.out.println("Selected file: " + selectedFileName);
         }
     }
     
     // this method gets executed when the "Insert Data" button is clicked in the Insert Stats frame
     private void insertDataButtonClicked() {
-        Batter player = new Batter();
-        String[] name = nameField.getText().split(" ");
-        String firstName = name[0];
-        String lastName = name[1];
-        
-        player.setFirstName(firstName);
-        player.setLastName(lastName);
-        player.setDateOfGame(dateField.getText());
-        player.setab(Integer.parseInt(abField.getText()));
-        player.setr(Integer.parseInt(rField.getText()));
-        player.seth(Integer.parseInt(hField.getText()));
-        player.setrbi(Integer.parseInt(rbiField.getText()));
-        player.setbb(Integer.parseInt(bbField.getText()));
-        player.setso(Integer.parseInt(soField.getText()));
-        player.setpo(Integer.parseInt(poField.getText()));
-        player.seta(Integer.parseInt(aField.getText()));
-        player.setlob(Integer.parseInt(lobField.getText()));
-        
-        FileClass file = new FileClass(player);
-        file.save(player);
+        if (nameField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Name field is empty.");
+        }else if (dateField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Date field is empty.");
+        } else if (abField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The At Bat field is empty.");
+        } else if (rField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Runs field is empty.");
+        } else if (hField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Hits field is empty.");
+        } else if (rbiField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Runs Batetd In field is empty.");
+        } else if (bbField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Walk field is empty.");
+        } else if (soField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Strikeout field is empty.");
+        } else if (poField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Putout field is empty.");
+        } else if (aField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Assist field is empty.");
+        } else if (lobField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Left on Base field is empty.");
+        } else {
+            Batter player = new Batter();
+            String[] name = nameField.getText().split(" ");
+            String firstName = name[0];
+            String lastName = name[1];
+
+            player.setFirstName(firstName);
+            player.setLastName(lastName);
+            player.setDateOfGame(dateField.getText());
+            player.setab(Integer.parseInt(abField.getText()));
+            player.setr(Integer.parseInt(rField.getText()));
+            player.seth(Integer.parseInt(hField.getText()));
+            player.setrbi(Integer.parseInt(rbiField.getText()));
+            player.setbb(Integer.parseInt(bbField.getText()));
+            player.setso(Integer.parseInt(soField.getText()));
+            player.setpo(Integer.parseInt(poField.getText()));
+            player.seta(Integer.parseInt(aField.getText()));
+            player.setlob(Integer.parseInt(lobField.getText()));
+
+            FileClass file = new FileClass(player);
+            file.save(player);
+        }
+    }
+    
+    private void readFileButtonClicked() throws FileNotFoundException, IOException {
+        String selectedFile = "./games/" + (String) b.getSelectedValue();
+        String passFile = (String) b.getSelectedValue(); // added 5/5 -KJC
+        ReportClass report = new ReportClass(passFile);
+        try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
+            /* Commented out to pass the entire line to writeReport 5/5 -KJC
+            int i;
+                while ((i=br.read()) != -1){
+                    //String reportLine = report.writeReport(br.readLine());
+                    //report.writeReport(br.readLine());
+                    System.out.print((char) i);
+                }*/
+            String line;
+            while ((line = br.readLine()) != null){
+                report.writeReport(line);
+            }
+        }
     }
     
     // this method gets executed when the Clear button in the Insert Stats frame is clicked
@@ -380,10 +421,7 @@ public class BaseballApp extends JFrame{
         for (String pathname : pathnames) {
             // Print the names of files and directories          
             games.add(pathname);
-        }
-         
-        
-        
+        }      
         b = new JList(games.toArray());
         b.setPreferredSize(new Dimension(200, 200));
         b.setSelectedIndex(0);
@@ -407,39 +445,12 @@ public class BaseballApp extends JFrame{
         setSize(new Dimension(490, 380));
         setVisible(true);
         pack();
-        
-        
-        
-
     }
-    
-    
-    
     // main method that calls the BaseballApp class and launches the GUI
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
             new BaseballApp();           
-        });
-        
-    }    
-    
-    
-    private void readFileButtonClicked() throws FileNotFoundException, IOException {
-        String selectedFile = "./games/" + (String) b.getSelectedValue();
-        String passFile = (String) b.getSelectedValue(); // added 5/5 -KJC
-        ReportClass report = new ReportClass(passFile);
-        try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
-            /* Commented out to pass the entire line to writeReport 5/5 -KJC
-            int i;
-                while ((i=br.read()) != -1){
-                    //String reportLine = report.writeReport(br.readLine());
-                    //report.writeReport(br.readLine());
-                    System.out.print((char) i);
-                }*/
-            String line;
-            while ((line = br.readLine()) != null){
-                report.writeReport(line);
-            }
-        }}
-    }
+        });       
+    }        
+ }
 
