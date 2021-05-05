@@ -227,16 +227,16 @@ public class test extends JFrame{
             player.setab(Integer.parseInt(abField.getText()));
             player.setr(Integer.parseInt(rField.getText()));
             player.seth(Integer.parseInt(hField.getText()));
-            player.seth2(Integer.parseInt(h2Field.getText()));
-            player.seth3(Integer.parseInt(h3Field.getText()));
-            player.sethr(Integer.parseInt(hrField.getText()));
+            player.setH2(Integer.parseInt(h2Field.getText()));
+            player.setH3(Integer.parseInt(h3Field.getText()));
+            player.setHr(Integer.parseInt(hrField.getText()));
             player.setrbi(Integer.parseInt(rbiField.getText()));
             player.setbb(Integer.parseInt(bbField.getText()));
             player.setso(Integer.parseInt(soField.getText()));
             player.setpo(Integer.parseInt(poField.getText()));
             player.seta(Integer.parseInt(aField.getText()));
             player.setlob(Integer.parseInt(lobField.getText()));
-            player.setsf(Integer.parseInt(sfField.getText()));
+            player.setSf(Integer.parseInt(sfField.getText()));
             player.sethbp(Integer.parseInt(hbpField.getText()));
 
             FileClass file = new FileClass(player);
