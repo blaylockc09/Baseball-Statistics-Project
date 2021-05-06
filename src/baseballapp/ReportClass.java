@@ -14,7 +14,7 @@ import java.text.NumberFormat;
 public class ReportClass{
     private Path playerReportPath = null;
     private File playerReportFile = null;
-    private final int FIELD_SPACE_STATS = 5;
+    private final int FIELD_SPACE_STATS = 7;
     private final int FIELD_SPACE_NAME = 20;
     private final String FIELD_SEP = "";
     String[] pathnames;
