@@ -528,10 +528,11 @@ public class test extends JFrame{
         setLocationRelativeTo(null);
     }
     
+    // method of JPanel used to draw images rather than background color
     @Override
     public void paintComponents(Graphics g) {
         super.paintComponents(g);
-        g.drawImage(image, 0, 0, this); // see javadoc for more info on the parameters            
+        g.drawImage(image, 0, 0, this);             
     }
     
     // main method that calls the BaseballApp class and launches the GUI
