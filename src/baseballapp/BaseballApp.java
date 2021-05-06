@@ -545,5 +545,3 @@ public class BaseballApp extends JFrame{
         });       
     }   
 }
-    
-
