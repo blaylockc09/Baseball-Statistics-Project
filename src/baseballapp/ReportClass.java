@@ -8,6 +8,8 @@ package baseballapp;
 
 import java.io.*;
 import java.nio.file.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 public class ReportClass{
     private Path playerReportPath = null;
@@ -37,20 +39,25 @@ public class ReportClass{
             .append(StringUtil.pad("First Name",FIELD_SEP,FIELD_SPACE_NAME))
             .append(StringUtil.pad("ab",FIELD_SEP,FIELD_SPACE_STATS))
             .append(StringUtil.pad("r",FIELD_SEP,FIELD_SPACE_STATS))
-            .append(StringUtil.pad("h",FIELD_SEP,FIELD_SPACE_STATS))
+            .append(StringUtil.pad("1bh",FIELD_SEP,FIELD_SPACE_STATS))
+            .append(StringUtil.pad("2bh",FIELD_SEP,FIELD_SPACE_STATS))     
+            .append(StringUtil.pad("3bh",FIELD_SEP,FIELD_SPACE_STATS))     
+            .append(StringUtil.pad("hr",FIELD_SEP,FIELD_SPACE_STATS))
             .append(StringUtil.pad("rbi",FIELD_SEP,FIELD_SPACE_STATS))
             .append(StringUtil.pad("bb",FIELD_SEP,FIELD_SPACE_STATS))
             .append(StringUtil.pad("so",FIELD_SEP,FIELD_SPACE_STATS))
             .append(StringUtil.pad("po",FIELD_SEP,FIELD_SPACE_STATS))
             .append(StringUtil.pad("a",FIELD_SEP,FIELD_SPACE_STATS))
             .append(StringUtil.pad("lob",FIELD_SEP,FIELD_SPACE_STATS))
+            .append(StringUtil.pad("sf",FIELD_SEP,FIELD_SPACE_STATS))     
+            .append(StringUtil.pad("hbp",FIELD_SEP,FIELD_SPACE_STATS))     
             .append(StringUtil.pad("ba",FIELD_SEP,FIELD_SPACE_STATS))
             .append(StringUtil.pad("tb",FIELD_SEP,FIELD_SPACE_STATS))
             .append(StringUtil.pad("slg",FIELD_SEP,FIELD_SPACE_STATS))
             .append(StringUtil.pad("obp",FIELD_SEP,FIELD_SPACE_STATS));
        
        StringBuilder d = new StringBuilder();
-       for(int i=0;i<110;i++)
+       for(int i=0;i<150;i++)
            d.append("-");
         
         try {
@@ -88,50 +95,52 @@ public class ReportClass{
         //assign parts to variables
         String fName = batter[0].trim();
         String lName = batter[1].trim();
-        int ab = Integer.parseInt(batter[2].trim());
+        double ab = Double.parseDouble(batter[2].trim());
         int r = Integer.parseInt(batter[3].trim());
-        int h = Integer.parseInt(batter[4].trim());
-        int rbi = Integer.parseInt(batter[5].trim());
-        int bb = Integer.parseInt(batter[6].trim());
-        int so = Integer.parseInt(batter[7].trim());
-        int po = Integer.parseInt(batter[8].trim());
-        int a = Integer.parseInt(batter[9].trim());
-        int lob = Integer.parseInt(batter[10].trim());
+        double h = Double.parseDouble(batter[4].trim());
+        double h2 = Double.parseDouble(batter[5].trim());
+        double h3 = Double.parseDouble(batter[6].trim());
+        double hr = Double.parseDouble(batter[7].trim());
+        int rbi = Integer.parseInt(batter[8].trim());
+        double bb = Double.parseDouble(batter[9].trim());
+        int so = Integer.parseInt(batter[10].trim());
+        int po = Integer.parseInt(batter[11].trim());
+        int a = Integer.parseInt(batter[12].trim());
+        int lob = Integer.parseInt(batter[13].trim());
+        double sf = Double.parseDouble(batter[14].trim());
+        double hbp = Double.parseDouble(batter[15].trim());
         
-        //convert to double for batAvg 
-        //double hits = h + h2 + h3 + hr;
-        //double batAvg = hits/ab_d;
-        double ab_d = ab;
-        double h_d = h;
-        double batAvg = h_d/ab_d;
+        double hits = h + h2 + h3 + hr;//total hits
+        double batAvg = hits/ab;
         
-        //Total bases stat will need doubles and triples collected in GUI to function
-        //int tBases = h + (2 * h2) + (3 * h3) + (4 * hr);
-        int tBases = 0;
+        double tBases = h + (2 * h2) + (3 * h3) + (4 * hr);
         
-        //will need total bases functional to get this stat
-        //sPercent = tBases / ab;
-        double sPercent = 0.0;
+        double sPercent = tBases / ab;
         
-        //need hit-by-pitch and sacrifice fly for on-base-percent
-        //double onBasePercent = (h + bb + hbp) / (ab + bb + hbp + sf);
-        double onBasePercent = 0.0;
+        double onBasePercent = (hits + bb + hbp) / (ab + bb + hbp + sf);
+        
+        
         
         //append all stats
         StringBuilder batterStatsIn = new StringBuilder();
         batterStatsIn.append(StringUtil.pad(lName + ",",FIELD_SEP,FIELD_SPACE_NAME));
         batterStatsIn.append(StringUtil.pad(fName,FIELD_SEP,FIELD_SPACE_NAME));
-        batterStatsIn.append(StringUtil.pad(Integer.toString(ab), FIELD_SEP,FIELD_SPACE_STATS));
+        batterStatsIn.append(StringUtil.pad(Integer.toString((int)ab), FIELD_SEP,FIELD_SPACE_STATS));
         batterStatsIn.append(StringUtil.pad(Integer.toString(r), FIELD_SEP,FIELD_SPACE_STATS));
-        batterStatsIn.append(StringUtil.pad(Integer.toString(h), FIELD_SEP,FIELD_SPACE_STATS));
+        batterStatsIn.append(StringUtil.pad(Integer.toString((int)h), FIELD_SEP,FIELD_SPACE_STATS));
+        batterStatsIn.append(StringUtil.pad(Integer.toString((int)h2), FIELD_SEP,FIELD_SPACE_STATS));
+        batterStatsIn.append(StringUtil.pad(Integer.toString((int)h3), FIELD_SEP,FIELD_SPACE_STATS));
+        batterStatsIn.append(StringUtil.pad(Integer.toString((int)hr), FIELD_SEP,FIELD_SPACE_STATS));
         batterStatsIn.append(StringUtil.pad(Integer.toString(rbi), FIELD_SEP,FIELD_SPACE_STATS));
-        batterStatsIn.append(StringUtil.pad(Integer.toString(bb), FIELD_SEP,FIELD_SPACE_STATS));
+        batterStatsIn.append(StringUtil.pad(Integer.toString((int)bb), FIELD_SEP,FIELD_SPACE_STATS));
         batterStatsIn.append(StringUtil.pad(Integer.toString(so), FIELD_SEP,FIELD_SPACE_STATS));
         batterStatsIn.append(StringUtil.pad(Integer.toString(po), FIELD_SEP,FIELD_SPACE_STATS));
         batterStatsIn.append(StringUtil.pad(Integer.toString(a), FIELD_SEP,FIELD_SPACE_STATS));
         batterStatsIn.append(StringUtil.pad(Integer.toString(lob), FIELD_SEP,FIELD_SPACE_STATS));
+        batterStatsIn.append(StringUtil.pad(Integer.toString((int)sf), FIELD_SEP,FIELD_SPACE_STATS));
+        batterStatsIn.append(StringUtil.pad(Integer.toString((int)hbp), FIELD_SEP,FIELD_SPACE_STATS));
         batterStatsIn.append(StringUtil.pad(Double.toString(batAvg), FIELD_SEP,FIELD_SPACE_STATS));
-        batterStatsIn.append(StringUtil.pad(Integer.toString(tBases), FIELD_SEP,FIELD_SPACE_STATS));
+        batterStatsIn.append(StringUtil.pad(Double.toString((int)tBases), FIELD_SEP,FIELD_SPACE_STATS));
         batterStatsIn.append(StringUtil.pad(Double.toString(sPercent), FIELD_SEP,FIELD_SPACE_STATS));
         batterStatsIn.append(StringUtil.pad(Double.toString(onBasePercent), FIELD_SEP,FIELD_SPACE_STATS));
         
