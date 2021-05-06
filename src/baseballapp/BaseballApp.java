@@ -69,7 +69,7 @@ public class BaseballApp extends JFrame{
       
       // reads an image file
       try {                
-            image = ImageIO.read(new File("./images/baseball.png"));
+            image = ImageIO.read(new File("baseball.png"));
       } catch (IOException ex) {
             System.out.println(ex);
       }
