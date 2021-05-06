@@ -16,9 +16,21 @@ public class ReportClass{
     private final int FIELD_SPACE_NAME = 20;
     private final String FIELD_SEP = "";
     String[] pathnames;
+    private String filename;
     
     public ReportClass(String passFile){
-        
+        filename = passFile;
+        File rfolder = new File("./reports");
+        playerReportPath = Paths.get(rfolder + "/" + filename.substring(0, 10) + "_Report.txt");
+        if(Files.exists(playerReportPath)){
+            System.out.println("**********************");
+            System.out.println("Deleting current file.");
+            System.out.println("**********************");
+            playerReportPath.toFile().delete();
+        }
+    }
+    
+    public void createHeader(){
         //Create header for report
          StringBuilder title = new StringBuilder();
          title.append(StringUtil.pad("Last Name,",FIELD_SEP,FIELD_SPACE_NAME))
@@ -41,17 +53,11 @@ public class ReportClass{
        for(int i=0;i<110;i++)
            d.append("-");
         
-        File rfolder = new File("./reports");
-        
-        //use structure from FileClass to create report file
-        //LocalDate playerGameDate = LocalDate.parse(player.getDateOfGame());
-        playerReportPath = Paths.get(rfolder + "/" + passFile.substring(0, 10) + "_Report.txt");
         try {
             if(Files.notExists(playerReportPath)){
-                System.out.println("********************");
-                System.out.println("Data file not found.");
-                System.out.println("********************");
-                System.out.println("Creating file: " + playerReportPath.toAbsolutePath() + "\n");
+                System.out.println("************************");
+                System.out.println("Creating file: " + playerReportPath.toAbsolutePath());
+                System.out.println("************************");
                 Files.createFile(playerReportPath);
             }
         }catch (IOException e){
@@ -133,7 +139,7 @@ public class ReportClass{
         try(PrintWriter out = new PrintWriter(
                               new BufferedWriter(
                               new FileWriter(playerReportFile, true)))) {
-            out.println(batterStatsIn);
+            out.println(batterStatsIn + "\n");
             out.close();
         } catch (IOException e){
             System.out.println(e);
