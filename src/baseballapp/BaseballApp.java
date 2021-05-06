@@ -283,12 +283,27 @@ public class BaseballApp extends JFrame{
             report.createHeader();//create header outside of loop to maintain -KJC
             String line;
             while ((line = br.readLine()) != null){
-                JOptionPane.showMessageDialog(null, line, (String) b.getSelectedValue(), JOptionPane.INFORMATION_MESSAGE);
                 report.writeReport(line);//write report to file -KJC
             }
         }finally { // closes the file after it is being read
             br.close();
         }
+        //added 5/6 - KJC
+        String selectedReport = "./reports/" + gameDate.substring(0,10) + "_Report.txt";
+        BufferedReader reader = new BufferedReader(new FileReader(selectedReport));
+        List PlayerStats = new List();//created to store lines from report.
+        try {
+            String line1;
+            while ((line1 = reader.readLine()) != null){
+                PlayerStats.add(line1);//add to list
+            }
+        }finally { 
+            JScrollPane playerScrollpane = new JScrollPane(PlayerStats);//add list to scrollpane
+            playerScrollpane.setPreferredSize(new Dimension(800,250));//add size for scrollpane
+            JOptionPane.showMessageDialog(null, playerScrollpane, gameDate, JOptionPane.PLAIN_MESSAGE);//display report
+            reader.close();// closes the file
+        }
+        //
     }
     
     // this method gets executed when the Clear button in the Insert Stats frame is clicked
