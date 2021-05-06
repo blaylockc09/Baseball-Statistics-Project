@@ -276,6 +276,7 @@ public class BaseballApp extends JFrame{
     // reads a file when the Read File button is clicked
     private void readFileButtonClicked() throws FileNotFoundException, IOException {
         String selectedFile = "./games/" + (String) b.getSelectedValue();
+        String gameDate = (String) b.getSelectedValue();
         BufferedReader br = new BufferedReader(new FileReader(selectedFile));
         String passFile = (String) b.getSelectedValue(); // added 5/5 -KJC
         ReportClass report = new ReportClass(passFile); //added 5/5 -KJC
