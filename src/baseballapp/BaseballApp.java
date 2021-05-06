@@ -424,22 +424,22 @@ public class BaseballApp extends JFrame{
     }    
     
     
+    // reads a file when the Read File button is clicked
     private void readFileButtonClicked() throws FileNotFoundException, IOException {
         String selectedFile = "./games/" + (String) b.getSelectedValue();
+        BufferedReader br = new BufferedReader(new FileReader(selectedFile));
         String passFile = (String) b.getSelectedValue(); // added 5/5 -KJC
-        ReportClass report = new ReportClass(passFile);
-        try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
-            /* Commented out to pass the entire line to writeReport 5/5 -KJC
-            int i;
-                while ((i=br.read()) != -1){
-                    //String reportLine = report.writeReport(br.readLine());
-                    //report.writeReport(br.readLine());
-                    System.out.print((char) i);
-                }*/
+        ReportClass report = new ReportClass(passFile); //added 5/5 -KJC
+        try {
+            report.createHeader();//create header outside of loop to maintain -KJC
             String line;
             while ((line = br.readLine()) != null){
-                report.writeReport(line);
+                JOptionPane.showMessageDialog(null, line, (String) b.getSelectedValue(), JOptionPane.INFORMATION_MESSAGE);
+                report.writeReport(line);//write report to file -KJC
             }
-        }}
+        }finally { // closes the file after it is being read
+            br.close();
+        }
     }
+}
 
