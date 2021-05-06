@@ -6,7 +6,7 @@ Date: 05/03/2021
 package baseballapp;
 import static baseballapp.FileClass.games;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import javax.imageio.ImageIO;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 // BaseballApp class extends the JFrame Class
@@ -39,6 +40,7 @@ public class test extends JFrame{
     private JTextField sfField;
     private JTextField hbpField;
     private JTextArea statsTextArea;
+    private BufferedImage image;
     //private FileClass file = new FileClass();
     private JList b;
     String gameSelected = "";
@@ -56,13 +58,38 @@ public class test extends JFrame{
         initComponents();
     }
 
+          
     // creates the GUI window and its elements
     private void initComponents() {
       // creates the main window
-      JFrame frame = new JFrame();
+      JFrame frame = new JFrame();  
       frame.setTitle("Baseball Stats Application");
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+      
+      // reads an image file
+      try {                
+            image = ImageIO.read(new File("baseball.png"));
+      } catch (IOException ex) {
+            System.out.println(ex);
+      }
+      
+      // creates an image icon
+      ImageIcon icon = new ImageIcon(image);
+      Image newImage = icon.getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH);
+      ImageIcon ic = new ImageIcon(newImage);
+      
+      // creates a label and adds the image file to the label
+      JLabel imageLabel = new JLabel();
+      imageLabel.setIcon(ic);
+      
+      // creates a panel and appends the imagePanel to the frame
+      JPanel imagePanel = new JPanel();
+      imagePanel.add(imageLabel);
+      imagePanel.setPreferredSize(new Dimension(400,90));
+      imagePanel.setMaximumSize(new Dimension(400, 90));
+      frame.add(imagePanel);
+
       
       // creates a heading and sets its font type and size
       JLabel heading = new JLabel("Baseball Stats Application", JLabel.CENTER);
@@ -74,6 +101,8 @@ public class test extends JFrame{
       headingPanel.setPreferredSize(new Dimension(400,90));
       headingPanel.setMaximumSize(new Dimension(400, 90));
       frame.getContentPane().add(headingPanel);
+      
+      //frame.getContentPane().setBackground(Color.YELLOW);
       
       // creates the buttons
       JButton insertButton = new JButton("Insert Stats");
@@ -107,12 +136,12 @@ public class test extends JFrame{
       panel.setMaximumSize(new Dimension(110, 500));
       frame.getContentPane().add(panel);
       
-      // displays the window in the center
-      frame.setLocationRelativeTo(null);
       //sets the size of the window and sets its visibility to true
-      frame.setMinimumSize(new Dimension(300, 300));
+      frame.setMinimumSize(new Dimension(330, 390));
       frame.setVisible(true);
       pack();
+      // displays the window in the center
+      frame.setLocationRelativeTo(null);
     }
     
     // helper method for getting a GridBagConstraints object
@@ -410,11 +439,12 @@ public class test extends JFrame{
         add(panel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
         
-        // Displays the window in the center
-        setLocationRelativeTo(null);
+        
         setMinimumSize(new Dimension(420, 425));
         setVisible(true);
         pack();
+        // displays the window in the center
+        setLocationRelativeTo(null);
     }
     
     // creates a frame that is used to read the data from a file
@@ -490,12 +520,20 @@ public class test extends JFrame{
         add(panel, BorderLayout.WEST);
         add(buttonPanel, BorderLayout.EAST);
         
-        // displays the window in the center 
-        setLocationRelativeTo(null);
+        
         setMinimumSize(new Dimension(490, 380));
         setVisible(true);
-        pack();              
+        pack();
+        // displays the window in the center 
+        setLocationRelativeTo(null);
     }
+    
+    @Override
+    public void paintComponents(Graphics g) {
+        super.paintComponents(g);
+        g.drawImage(image, 0, 0, this); // see javadoc for more info on the parameters            
+    }
+    
     // main method that calls the BaseballApp class and launches the GUI
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
