@@ -6,6 +6,7 @@ Date: 05/03/2021
 package baseballapp;
 import static baseballapp.FileClass.games;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import javax.imageio.ImageIO;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 // BaseballApp class extends the JFrame Class
 public class BaseballApp extends JFrame{
@@ -31,7 +34,13 @@ public class BaseballApp extends JFrame{
     private JTextField poField;
     private JTextField aField;
     private JTextField lobField;
+    private JTextField h2Field;
+    private JTextField h3Field;
+    private JTextField hrField;
+    private JTextField sfField;
+    private JTextField hbpField;
     private JTextArea statsTextArea;
+    private BufferedImage image;
     //private FileClass file = new FileClass();
     private JList b;
     String gameSelected = "";
@@ -49,13 +58,38 @@ public class BaseballApp extends JFrame{
         initComponents();
     }
 
+          
     // creates the GUI window and its elements
     private void initComponents() {
       // creates the main window
-      JFrame frame = new JFrame();
+      JFrame frame = new JFrame();  
       frame.setTitle("Baseball Stats Application");
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+      
+      // reads an image file
+      try {                
+            image = ImageIO.read(new File("./images/baseball.png"));
+      } catch (IOException ex) {
+            System.out.println(ex);
+      }
+      
+      // creates an image icon
+      ImageIcon icon = new ImageIcon(image);
+      Image newImage = icon.getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH);
+      ImageIcon ic = new ImageIcon(newImage);
+      
+      // creates a label and adds the image file to the label
+      JLabel imageLabel = new JLabel();
+      imageLabel.setIcon(ic);
+      
+      // creates a panel and appends the imagePanel to the frame
+      JPanel imagePanel = new JPanel();
+      imagePanel.add(imageLabel);
+      imagePanel.setPreferredSize(new Dimension(400,90));
+      imagePanel.setMaximumSize(new Dimension(400, 90));
+      frame.add(imagePanel);
+
       
       // creates a heading and sets its font type and size
       JLabel heading = new JLabel("Baseball Stats Application", JLabel.CENTER);
@@ -67,6 +101,8 @@ public class BaseballApp extends JFrame{
       headingPanel.setPreferredSize(new Dimension(400,90));
       headingPanel.setMaximumSize(new Dimension(400, 90));
       frame.getContentPane().add(headingPanel);
+      
+      //frame.getContentPane().setBackground(Color.YELLOW);
       
       // creates the buttons
       JButton insertButton = new JButton("Insert Stats");
@@ -100,12 +136,12 @@ public class BaseballApp extends JFrame{
       panel.setMaximumSize(new Dimension(110, 500));
       frame.getContentPane().add(panel);
       
-      // displays the window in the center
-      frame.setLocationRelativeTo(null);
       //sets the size of the window and sets its visibility to true
-      frame.setSize(300, 300);
+      frame.setMinimumSize(new Dimension(330, 390));
       frame.setVisible(true);
       pack();
+      // displays the window in the center
+      frame.setLocationRelativeTo(null);
     }
     
     // helper method for getting a GridBagConstraints object
@@ -158,46 +194,101 @@ public class BaseballApp extends JFrame{
     *  both, the insert stats frame and in the read stats frame
     */
     private void fileButtonClicked() {
-        
         // creates a file chooser
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        // sets the default directory to the current directory
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+        // adds another options that allows to choose only .txt files
+        FileNameExtensionFilter restrict = new FileNameExtensionFilter("Only .txt files", "txt");
+        fileChooser.setFileFilter(restrict);
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             //ArrayList<String> batter = new ArrayList<>();
-            
-            
-            File selectedFile = fileChooser.getSelectedFile();
-            
-            String selectedFileName = selectedFile.getName();
-            
-            
+            File selectedFile = fileChooser.getSelectedFile();            
+            String selectedFileName = selectedFile.getName();                    
             System.out.println("Selected file: " + selectedFileName);
         }
     }
     
     // this method gets executed when the "Insert Data" button is clicked in the Insert Stats frame
     private void insertDataButtonClicked() {
-        Batter player = new Batter();
-        String[] name = nameField.getText().split(" ");
-        String firstName = name[0];
-        String lastName = name[1];
-        
-        player.setFirstName(firstName);
-        player.setLastName(lastName);
-        player.setDateOfGame(dateField.getText());
-        player.setab(Integer.parseInt(abField.getText()));
-        player.setr(Integer.parseInt(rField.getText()));
-        player.seth(Integer.parseInt(hField.getText()));
-        player.setrbi(Integer.parseInt(rbiField.getText()));
-        player.setbb(Integer.parseInt(bbField.getText()));
-        player.setso(Integer.parseInt(soField.getText()));
-        player.setpo(Integer.parseInt(poField.getText()));
-        player.seta(Integer.parseInt(aField.getText()));
-        player.setlob(Integer.parseInt(lobField.getText()));
-        
-        FileClass file = new FileClass(player);
-        file.save(player);
+        if (nameField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Name field is empty.");
+        }else if (dateField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Date field is empty.");
+        } else if (abField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The At Bat field is empty.");
+        } else if (rField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Runs field is empty.");
+        } else if (hField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The 1 Base Hit field is empty.");
+        } else if (h2Field.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The 2 Base Hit field is empty.");
+        } else if (h3Field.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The 3 Base Hit field is empty.");
+        } else if (hrField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Homerun field is empty.");
+        } else if (rbiField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Runs Batetd In field is empty.");
+        } else if (bbField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Walk field is empty.");
+        } else if (soField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Strikeout field is empty.");
+        } else if (poField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Putout field is empty.");
+        } else if (aField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Assist field is empty.");
+        } else if (lobField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Left on Base field is empty.");
+        } else if (sfField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Sacrifice Fly field is empty.");
+        } else if (hbpField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "The Hit-by-Pitch field is empty.");
+        } else {
+            Batter player = new Batter();
+            String[] name = nameField.getText().split(" ");
+            String firstName = name[0];
+            String lastName = name[1];
+
+            player.setFirstName(firstName);
+            player.setLastName(lastName);
+            player.setDateOfGame(dateField.getText());
+            player.setab(Integer.parseInt(abField.getText()));
+            player.setr(Integer.parseInt(rField.getText()));
+            player.seth(Integer.parseInt(hField.getText()));
+            player.setH2(Integer.parseInt(h2Field.getText()));
+            player.setH3(Integer.parseInt(h3Field.getText()));
+            player.setHr(Integer.parseInt(hrField.getText()));
+            player.setrbi(Integer.parseInt(rbiField.getText()));
+            player.setbb(Integer.parseInt(bbField.getText()));
+            player.setso(Integer.parseInt(soField.getText()));
+            player.setpo(Integer.parseInt(poField.getText()));
+            player.seta(Integer.parseInt(aField.getText()));
+            player.setlob(Integer.parseInt(lobField.getText()));
+            player.setSf(Integer.parseInt(sfField.getText()));
+            player.setHbp(Integer.parseInt(hbpField.getText()));
+
+            FileClass file = new FileClass(player);
+            file.save(player);
+        }
+    }
+    
+    // reads a file when the Read File button is clicked
+    private void readFileButtonClicked() throws FileNotFoundException, IOException {
+        String selectedFile = "./games/" + (String) b.getSelectedValue();
+        BufferedReader br = new BufferedReader(new FileReader(selectedFile));
+        String passFile = (String) b.getSelectedValue(); // added 5/5 -KJC
+        ReportClass report = new ReportClass(passFile); //added 5/5 -KJC
+        try {
+            report.createHeader();//create header outside of loop to maintain -KJC
+            String line;
+            while ((line = br.readLine()) != null){
+                JOptionPane.showMessageDialog(null, line, (String) b.getSelectedValue(), JOptionPane.INFORMATION_MESSAGE);
+                report.writeReport(line);//write report to file -KJC
+            }
+        }finally { // closes the file after it is being read
+            br.close();
+        }
     }
     
     // this method gets executed when the Clear button in the Insert Stats frame is clicked
@@ -208,12 +299,17 @@ public class BaseballApp extends JFrame{
         abField.setText("");
         rField.setText("");
         hField.setText("");
+        h2Field.setText("");
+        h3Field.setText("");
+        hrField.setText("");
         rbiField.setText("");
         bbField.setText("");
         soField.setText("");
         poField.setText("");
         aField.setText("");
         lobField.setText("");
+        sfField.setText("");
+        hbpField.setText("");
     }
     
     // this method gets executed when the Clear button in the Read Stats frame is clicked
@@ -221,6 +317,8 @@ public class BaseballApp extends JFrame{
         // clears the text area
         statsTextArea.setText("");
     }
+    
+    
     
     // creates a frame that is used to insert stats to a file
     private void insertData(){
@@ -236,12 +334,17 @@ public class BaseballApp extends JFrame{
         abField = new JTextField();
         rField = new JTextField();
         hField = new JTextField();
+        h2Field = new JTextField();
+        h3Field = new JTextField();
+        hrField = new JTextField();
         rbiField = new JTextField();
         bbField = new JTextField();
         soField = new JTextField();
         poField = new JTextField();
         aField = new JTextField();
         lobField = new JTextField();
+        sfField = new JTextField();
+        hbpField = new JTextField();
         
         // sets the size of the text fields
         Dimension dim = new Dimension(180, 20);
@@ -250,24 +353,34 @@ public class BaseballApp extends JFrame{
         abField.setPreferredSize(dim);
         rField.setPreferredSize(dim);
         hField.setPreferredSize(dim);
+        h2Field.setPreferredSize(dim);
+        h3Field.setPreferredSize(dim);
+        hrField.setPreferredSize(dim);
         rbiField.setPreferredSize(dim);
         bbField.setPreferredSize(dim);
         soField.setPreferredSize(dim);
         poField.setPreferredSize(dim);
         aField.setPreferredSize(dim);
         lobField.setPreferredSize(dim);
+        sfField.setPreferredSize(dim);
+        hbpField.setPreferredSize(dim);
         
         nameField.setMinimumSize(dim);
         dateField.setMinimumSize(dim);
         abField.setMinimumSize(dim);
         rField.setMinimumSize(dim);
         hField.setMinimumSize(dim);
+        h2Field.setMinimumSize(dim);
+        h3Field.setMinimumSize(dim);
+        hrField.setMinimumSize(dim);
         rbiField.setMinimumSize(dim);
         bbField.setMinimumSize(dim);
         soField.setMinimumSize(dim);
         poField.setMinimumSize(dim);
         aField.setMinimumSize(dim);
         lobField.setMinimumSize(dim);
+        sfField.setMinimumSize(dim);
+        hbpField.setMinimumSize(dim);
         
         // Creates the buttons
         JButton fileButton = new JButton("Open a File");
@@ -300,30 +413,41 @@ public class BaseballApp extends JFrame{
         panel.add(abField, getConstraints(1, 2));
         panel.add(new JLabel("Runs:"), getConstraints(0, 3));
         panel.add(rField, getConstraints(1, 3));
-        panel.add(new JLabel("Hits:"), getConstraints(0, 4));
-        panel.add(hField, getConstraints(1, 4));    
-        panel.add(new JLabel("Runs Batted In:"), getConstraints(0, 5));
-        panel.add(rbiField, getConstraints(1, 5)); 
-        panel.add(new JLabel("Walk:"), getConstraints(0, 6));
-        panel.add(bbField, getConstraints(1, 6)); 
-        panel.add(new JLabel("Strikeout:"), getConstraints(0, 7));
-        panel.add(soField, getConstraints(1, 7)); 
-        panel.add(new JLabel("Putout:"), getConstraints(0, 8));
-        panel.add(poField, getConstraints(1, 8)); 
-        panel.add(new JLabel("Assist:"), getConstraints(0, 9));
-        panel.add(aField, getConstraints(1, 9)); 
-        panel.add(new JLabel("Left on Base:"), getConstraints(0, 10));
-        panel.add(lobField, getConstraints(1, 10)); 
+        panel.add(new JLabel("1 Base Hit:"), getConstraints(0, 4));
+        panel.add(hField, getConstraints(1, 4));         
+        panel.add(new JLabel("2 Base Hit:"), getConstraints(0, 5));
+        panel.add(h2Field, getConstraints(1, 5));
+        panel.add(new JLabel("3 Base Hit:"), getConstraints(0, 6));
+        panel.add(h3Field, getConstraints(1, 6));
+        panel.add(new JLabel("Homerun:"), getConstraints(0, 7));
+        panel.add(hrField, getConstraints(1, 7));       
+        panel.add(new JLabel("Runs Batted In:"), getConstraints(0, 8));
+        panel.add(rbiField, getConstraints(1, 8)); 
+        panel.add(new JLabel("Walk:"), getConstraints(0, 9));
+        panel.add(bbField, getConstraints(1, 9)); 
+        panel.add(new JLabel("Strikeout:"), getConstraints(0, 10));
+        panel.add(soField, getConstraints(1, 10)); 
+        panel.add(new JLabel("Putout:"), getConstraints(0, 11));
+        panel.add(poField, getConstraints(1, 11)); 
+        panel.add(new JLabel("Assist:"), getConstraints(0, 12));
+        panel.add(aField, getConstraints(1, 12)); 
+        panel.add(new JLabel("Left on Base:"), getConstraints(0, 13));
+        panel.add(lobField, getConstraints(1, 13)); 
+        panel.add(new JLabel("Sacrifice Fly:"), getConstraints(0, 14));
+        panel.add(sfField, getConstraints(1, 14)); 
+        panel.add(new JLabel("Hit-by-Pitch:"), getConstraints(0, 15));
+        panel.add(hbpField, getConstraints(1, 15)); 
 
         // adds the textField panel and the button panel in the specified position
         add(panel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
         
-        // Displays the window in the center
-        setLocationRelativeTo(null);
-        setSize(new Dimension(390, 380));
+        
+        setMinimumSize(new Dimension(420, 425));
         setVisible(true);
         pack();
+        // displays the window in the center
+        setLocationRelativeTo(null);
     }
     
     // creates a frame that is used to read the data from a file
@@ -380,18 +504,15 @@ public class BaseballApp extends JFrame{
         for (String pathname : pathnames) {
             // Print the names of files and directories          
             games.add(pathname);
-        }
-         
-        
-        
+        }     
         b = new JList(games.toArray());
-        b.setPreferredSize(new Dimension(200, 200));
+        b.setPreferredSize(new Dimension(300, 200));
         b.setSelectedIndex(0);
         panel.add(b);
         
         gameSelected =  "./games/" + b.getSelectedValue().toString();
         
-        System.out.println(gameSelected);
+        //System.out.println(gameSelected);
         
         // creates a scroll pane and adds it to the statsTextArea
         
@@ -402,44 +523,27 @@ public class BaseballApp extends JFrame{
         add(panel, BorderLayout.WEST);
         add(buttonPanel, BorderLayout.EAST);
         
-        // displays the window in the center 
-        setLocationRelativeTo(null);
-        setSize(new Dimension(490, 380));
+        
+        setMinimumSize(new Dimension(490, 380));
         setVisible(true);
         pack();
-        
-        
-        
-
+        // displays the window in the center 
+        setLocationRelativeTo(null);
     }
     
-    
+    // method of JPanel used to draw images rather than background color
+    @Override
+    public void paintComponents(Graphics g) {
+        super.paintComponents(g);
+        g.drawImage(image, 0, 0, this);             
+    }
     
     // main method that calls the BaseballApp class and launches the GUI
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
             new BaseballApp();           
-        });
-        
-    }    
-    
-    
-    // reads a file when the Read File button is clicked
-    private void readFileButtonClicked() throws FileNotFoundException, IOException {
-        String selectedFile = "./games/" + (String) b.getSelectedValue();
-        BufferedReader br = new BufferedReader(new FileReader(selectedFile));
-        String passFile = (String) b.getSelectedValue(); // added 5/5 -KJC
-        ReportClass report = new ReportClass(passFile); //added 5/5 -KJC
-        try {
-            report.createHeader();//create header outside of loop to maintain -KJC
-            String line;
-            while ((line = br.readLine()) != null){
-                JOptionPane.showMessageDialog(null, line, (String) b.getSelectedValue(), JOptionPane.INFORMATION_MESSAGE);
-                report.writeReport(line);//write report to file -KJC
-            }
-        }finally { // closes the file after it is being read
-            br.close();
-        }
-    }
+        });       
+    }   
 }
+    
 
