@@ -24,11 +24,11 @@ public class Batter
     private int lob; 
 
     public Batter(){
-        this("","","","",0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        this("","","","",0,0,0,0,0,0,0,0,0);
     }
 
-
-    public Batter(String lastName,String firstName,String position,String dateOfGame,int ab,int r,int h, int h2, int h3, int hr, int rbi,int bb, int so, int po, int a, int lob, int sf, int hbp){
+    
+    public Batter(String lastName,String firstName,String position,String dateOfGame,int ab,int r,int h,int rbi,int bb, int so, int po, int a, int lob){
         this.lastName = lastName;
         this.firstName = firstName;
         this.position = position;
@@ -36,17 +36,12 @@ public class Batter
         this.ab = ab;
         this.r = r;
         this.h = h;
-        this.h2 = h2; // added - kush 05/05
-        this.h3 = h3; // added - kush 05/05
-        this.hr = hr; // added - kush 05/05
         this.rbi = rbi;
         this.bb = bb; 
         this.so = so;
         this.po = po;
         this.a = a;
         this.lob = lob;
-        this.sf = sf; // added - kush 05/05
-        this.hbp = hbp; // added - kush 05/05
     }
 
     public void setLastName(String lastName) 
