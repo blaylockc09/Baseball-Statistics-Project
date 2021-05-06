@@ -21,7 +21,7 @@ import javax.imageio.ImageIO;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 // BaseballApp class extends the JFrame Class
-public class test extends JFrame{
+public class BaseballApp extends JFrame{
     // instance variables
     private JTextField nameField;
     private JTextField dateField;
@@ -46,7 +46,7 @@ public class test extends JFrame{
     String gameSelected = "";
     
     // sets the look of the window same as the current operating system
-    public test() {
+    public BaseballApp() {
         try {
             UIManager.setLookAndFeel(
                     UIManager.getSystemLookAndFeelClassName());
@@ -277,13 +277,16 @@ public class test extends JFrame{
     private void readFileButtonClicked() throws FileNotFoundException, IOException {
         String selectedFile = "./games/" + (String) b.getSelectedValue();
         BufferedReader br = new BufferedReader(new FileReader(selectedFile));
+        String passFile = (String) b.getSelectedValue(); // added 5/5 -KJC
+        ReportClass report = new ReportClass(passFile); //added 5/5 -KJC
         try {
-            String i;
-            while ((i = br.readLine()) != null){  
-                // displays the content of the file into an option pane
-                JOptionPane.showMessageDialog(null, i, (String) b.getSelectedValue(), JOptionPane.INFORMATION_MESSAGE);
-            } 
-        } finally { // closes the file after it is being readed
+            report.createHeader();//create header outside of loop to maintain -KJC
+            String line;
+            while ((line = br.readLine()) != null){
+                JOptionPane.showMessageDialog(null, line, (String) b.getSelectedValue(), JOptionPane.INFORMATION_MESSAGE);
+                report.writeReport(line);//write report to file -KJC
+            }
+        }finally { // closes the file after it is being read
             br.close();
         }
     }
@@ -469,7 +472,7 @@ public class test extends JFrame{
                 readFileButtonClicked();
                 
             } catch (IOException ex) {
-                Logger.getLogger(test.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(BaseballApp.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         clearButton.addActionListener(e -> clearDataButtonClicked());
@@ -538,7 +541,7 @@ public class test extends JFrame{
     // main method that calls the BaseballApp class and launches the GUI
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new test();           
+            new BaseballApp();           
         });       
-    }    
+    }   
 }
