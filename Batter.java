@@ -1,5 +1,6 @@
 package baseballapp;
 
+// Create batter class for statistics for each player  HD
 public class Batter 
 {
     private String lastName;
@@ -34,7 +35,8 @@ public class Batter
         this.a = a;
         this.lob = lob;
     }
-
+    
+    // Get and store player stats  HD
     public void setLastName(String lastName) 
     {
         this.lastName = lastName;
