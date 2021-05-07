@@ -339,10 +339,10 @@ public class BaseballApp extends JFrame{
     // creates a frame that is used to insert stats to a file
     private void insertData(){
         // creates a frame
-        JFrame insertFrame= new JFrame();
-        setTitle("Insert Stats");
+        JDialog insertFrame= new JDialog();
+        insertFrame.setTitle("Insert Stats");
         insertFrame.setSize(400, 500); 
-        insertFrame.setDefaultCloseOperation(insertFrame.EXIT_ON_CLOSE);
+        insertFrame.setDefaultCloseOperation(insertFrame.DISPOSE_ON_CLOSE);
         
         // Instance variable taht creates text fields
         nameField = new JTextField();
@@ -408,7 +408,7 @@ public class BaseballApp extends JFrame{
         fileButton.addActionListener(e -> fileButtonClicked());
         insertDataButton.addActionListener(e -> insertDataButtonClicked());
         clearButton.addActionListener(e -> clearButtonClicked());
-        exitButton.addActionListener(e -> dispose());
+        exitButton.addActionListener(e -> insertFrame.dispose());
 
         // button panel
         JPanel buttonPanel = new JPanel();
@@ -459,20 +459,20 @@ public class BaseballApp extends JFrame{
         add(buttonPanel, BorderLayout.SOUTH);
         
         
-        setMinimumSize(new Dimension(420, 425));
-        setVisible(true);
-        pack();
+        insertFrame.setMinimumSize(new Dimension(420, 425));
+        insertFrame.setVisible(true);
+        insertFrame.pack();
         // displays the window in the center
-        setLocationRelativeTo(null);
+        insertFrame.setLocationRelativeTo(null);
     }
     
     // creates a frame that is used to read the data from a file
     private void readData() {
              
     // creates a frame
-        JFrame readFrame= new JFrame();
-        setTitle("Read Stats");
-        readFrame.setDefaultCloseOperation(readFrame.EXIT_ON_CLOSE);
+        JDialog readFrame= new JDialog();
+        readFrame.setTitle("Read Stats");
+        readFrame.setDefaultCloseOperation(readFrame.DISPOSE_ON_CLOSE);
                 
         // creates the buttons
         JButton fileButton = new JButton("Open a File");
@@ -492,7 +492,7 @@ public class BaseballApp extends JFrame{
             }
         });
         clearButton.addActionListener(e -> clearDataButtonClicked());
-        exitButton.addActionListener(e -> dispose());
+        exitButton.addActionListener(e -> readFrame.dispose());
 
         // button panel
         JPanel buttonPanel = new JPanel(new GridBagLayout());
@@ -536,15 +536,15 @@ public class BaseballApp extends JFrame{
         panel.add(scroll);
 
         // adds the above text area and button panel to the specified position
-        add(panel, BorderLayout.WEST);
-        add(buttonPanel, BorderLayout.EAST);
+        readFrame.add(panel, BorderLayout.WEST);
+        readFrame.add(buttonPanel, BorderLayout.EAST);
         
         
-        setMinimumSize(new Dimension(490, 380));
-        setVisible(true);
-        pack();
+        readFrame.setMinimumSize(new Dimension(490, 380));
+        readFrame.setVisible(true);
+        readFrame.pack();
         // displays the window in the center 
-        setLocationRelativeTo(null);
+        readFrame.setLocationRelativeTo(null);
     }
     
     // method of JPanel used to draw images rather than background color
