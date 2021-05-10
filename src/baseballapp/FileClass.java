@@ -58,23 +58,23 @@ public class FileClass {
             StringBuilder list = new StringBuilder();
             
             //Added field separator to make reading the file easier for report class - KJC 5/5
-            list.append(StringUtil.pad(player.getFirstName(),FIELD_SEP));
-            list.append(StringUtil.pad(player.getLastName(),FIELD_SEP));
-            list.append(StringUtil.pad(Integer.toString(player.getab()), FIELD_SEP));
-            list.append(StringUtil.pad(Integer.toString(player.getr()), FIELD_SEP));
-            list.append(StringUtil.pad(Integer.toString(player.geth()), FIELD_SEP));
-            list.append(StringUtil.pad(Integer.toString(player.getH2()), FIELD_SEP)); // added - Kush 05/05
-            list.append(StringUtil.pad(Integer.toString(player.getH3()), FIELD_SEP)); // added - Kush 05/05
-            list.append(StringUtil.pad(Integer.toString(player.getHr()), FIELD_SEP)); // added - Kush 05/05
-            list.append(StringUtil.pad(Integer.toString(player.getrbi()), FIELD_SEP));
-            list.append(StringUtil.pad(Integer.toString(player.getbb()), FIELD_SEP));
-            list.append(StringUtil.pad(Integer.toString(player.getso()), FIELD_SEP));
-            list.append(StringUtil.pad(Integer.toString(player.getpo()), FIELD_SEP));
-            list.append(StringUtil.pad(Integer.toString(player.geta()), FIELD_SEP));
-            list.append(StringUtil.pad(Integer.toString(player.getlob()), FIELD_SEP));
+            list.append(StringUtil.pad(player.getFirstName(),FIELD_SEP,FIELD_SPACE));
+            list.append(StringUtil.pad(player.getLastName(),FIELD_SEP,FIELD_SPACE));
+            list.append(StringUtil.pad(Integer.toString(player.getab()), FIELD_SEP,FIELD_SPACE));// added FIELD_SPACE - CJB 05/10
+            list.append(StringUtil.pad(Integer.toString(player.getr()), FIELD_SEP,FIELD_SPACE));// added FIELD_SPACE - CJB 05/10
+            list.append(StringUtil.pad(Integer.toString(player.geth()), FIELD_SEP,FIELD_SPACE));// added FIELD_SPACE - CJB 05/10
+            list.append(StringUtil.pad(Integer.toString(player.getH2()), FIELD_SEP,FIELD_SPACE)); // added - Kush 05/05 // added FIELD_SPACE - CJB 05/10
+            list.append(StringUtil.pad(Integer.toString(player.getH3()), FIELD_SEP,FIELD_SPACE)); // added - Kush 05/05 // added FIELD_SPACE - CJB 05/10 
+            list.append(StringUtil.pad(Integer.toString(player.getHr()), FIELD_SEP,FIELD_SPACE)); // added - Kush 05/05 // added FIELD_SPACE - CJB 05/10
+            list.append(StringUtil.pad(Integer.toString(player.getrbi()), FIELD_SEP,FIELD_SPACE));// added FIELD_SPACE - CJB 05/10
+            list.append(StringUtil.pad(Integer.toString(player.getbb()), FIELD_SEP,FIELD_SPACE));// added FIELD_SPACE - CJB 05/10
+            list.append(StringUtil.pad(Integer.toString(player.getso()), FIELD_SEP,FIELD_SPACE));// added FIELD_SPACE - CJB 05/10
+            list.append(StringUtil.pad(Integer.toString(player.getpo()), FIELD_SEP,FIELD_SPACE));// added FIELD_SPACE - CJB 05/10
+            list.append(StringUtil.pad(Integer.toString(player.geta()), FIELD_SEP,FIELD_SPACE));// added FIELD_SPACE - CJB 05/10
+            list.append(StringUtil.pad(Integer.toString(player.getlob()), FIELD_SEP,FIELD_SPACE));// added FIELD_SPACE - CJB 05/10
             // added - Kush 05/05
-            list.append(StringUtil.pad(Integer.toString(player.getSf()), FIELD_SEP));
-            list.append(StringUtil.pad(Integer.toString(player.getHbp()), FIELD_SEP));
+            list.append(StringUtil.pad(Integer.toString(player.getSf()), FIELD_SEP,FIELD_SPACE));// added FIELD_SPACE - CJB 05/10
+            list.append(StringUtil.pad(Integer.toString(player.getHbp()), FIELD_SEP,FIELD_SPACE));// added FIELD_SPACE - CJB 05/10
             //
             
             out.println(list);
