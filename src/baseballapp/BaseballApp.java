@@ -11,7 +11,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -276,8 +278,28 @@ public class BaseballApp extends JFrame{
     // reads a file when the Read File button is clicked
     private void readFileButtonClicked() throws FileNotFoundException, IOException {
         String selectedFile = "./games/" + (String) b.getSelectedValue();
+        // put all filenames into and arraylist so that we can read multiple files - cjb 
+        ArrayList selectedFiles = (ArrayList) b.getSelectedValuesList();
         String gameDate = (String) b.getSelectedValue();
-        BufferedReader br = new BufferedReader(new FileReader(selectedFile));
+        // write selected files to average.txt so that we can use it to make a report for multiple games
+        FileWriter pw = new FileWriter("average.txt");
+        // loop through the selected games
+        for (Object selectedFilei : selectedFiles) {
+            String file = "./games/" + selectedFilei; // we have to add the games directory here
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line = br.readLine();
+            while (line != null)
+            {
+                pw.write(line + "\n"); // write to the average file
+                line = br.readLine();
+            }
+        }
+        // closing resources    
+        pw.flush();
+        pw.close();
+        
+        // start reports
+        BufferedReader br = new BufferedReader(new FileReader(selectedFile));//added 5/6 - KJC
         String passFile = (String) b.getSelectedValue(); // added 5/5 -KJC
         ReportClass report = new ReportClass(passFile); //added 5/5 -KJC
         try {
@@ -290,6 +312,9 @@ public class BaseballApp extends JFrame{
             br.close();
         }
         //added 5/6 - KJC
+        
+        
+        
         String selectedReport = "./reports/" + gameDate.substring(0,10) + "_Report.txt";
         BufferedReader reader = new BufferedReader(new FileReader(selectedReport));
         List PlayerStats = new List();//created to store lines from report.
