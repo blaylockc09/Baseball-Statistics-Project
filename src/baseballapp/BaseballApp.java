@@ -448,7 +448,7 @@ public class BaseballApp extends JFrame{
         panel.add(hbpField, getConstraints(1, 15)); 
 
         // adds the textField panel and the button panel in the specified position
-        jnsertFrame.add(panel, BorderLayout.CENTER);
+        insertFrame.add(panel, BorderLayout.CENTER);
         insertFrame.add(buttonPanel, BorderLayout.SOUTH);
         
         
@@ -491,6 +491,7 @@ public class BaseballApp extends JFrame{
         buttonPanel.add(exitButton);
         
         // creates a panel for the text area
+        JPanel panel = new JPanel();
         games = new ArrayList<>();
         
         File folder = new File("./games");
