@@ -304,8 +304,14 @@ public class BaseballApp extends JFrame{
             }
         }finally { 
             JScrollPane playerScrollpane = new JScrollPane(PlayerStats);//add list to scrollpane
+            JScrollPane playerAvgScrollpane = new JScrollPane();//placeholder for averages scrollpane.
             playerScrollpane.setPreferredSize(new Dimension(800,250));//add size for scrollpane
-            JOptionPane.showMessageDialog(null, playerScrollpane, gameDate, JOptionPane.PLAIN_MESSAGE);//display report
+            if(selectedFiles.size() > 1){
+                JOptionPane.showMessageDialog(null, playerAvgScrollpane, gameDate, JOptionPane.PLAIN_MESSAGE);//display report
+            }
+            else{
+               JOptionPane.showMessageDialog(null, playerScrollpane, gameDate, JOptionPane.PLAIN_MESSAGE);//display report 
+            }
             reader.close();// closes the file
         }
         //
