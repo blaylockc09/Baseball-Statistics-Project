@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.imageio.ImageIO;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 
 // BaseballApp class extends the JFrame Class
 public class BaseballApp extends JFrame{
@@ -290,31 +291,44 @@ public class BaseballApp extends JFrame{
         }finally { // closes the file after it is being read
             br.close();
         }
+        
         //added 5/6 - KJC
-        
-        
+        //updated 5/12 - KJC --Report now displays in a JTable
         
         String selectedReport = "./reports/" + gameDate.substring(0,10) + "_Report.txt";
         BufferedReader reader = new BufferedReader(new FileReader(selectedReport));
-        List PlayerStats = new List();//created to store lines from report.
+        DefaultTableModel model = new DefaultTableModel();//create table model to display report
         try {
             String line1;
+            //create title
+            String l = reader.readLine();
+            String[] titles = l.split(",");
+            
+            for(String t : titles){
+                model.addColumn(t);//add to model for JTable (titles)
+            }
             while ((line1 = reader.readLine()) != null){
-                PlayerStats.add(line1);//add to list
+                String[] data = line1.split(",");
+                model.addRow(data);//add to model for JTable (data)
             }
         }finally { 
-            JScrollPane playerScrollpane = new JScrollPane(PlayerStats);//add list to scrollpane
+            
+            JTable jt = new JTable();//create JTable
+            jt.setModel(model);//set to created model
+            jt.setEnabled(false);//disallow user to click on or edit any data.
+            
+            JScrollPane playerScrollpane = new JScrollPane(jt);//add list to scrollpane
+            playerScrollpane.setPreferredSize(new Dimension(1500,250));//add size for scrollpane
             JScrollPane playerAvgScrollpane = new JScrollPane();//placeholder for averages scrollpane.
-            playerScrollpane.setPreferredSize(new Dimension(800,250));//add size for scrollpane
             if(selectedFiles.size() > 1){
-                JOptionPane.showMessageDialog(null, playerAvgScrollpane, gameDate, JOptionPane.PLAIN_MESSAGE);//display report
+                JOptionPane.showMessageDialog(null, playerAvgScrollpane, gameDate, JOptionPane.PLAIN_MESSAGE);//display mulitple game average report
             }
             else{
-               JOptionPane.showMessageDialog(null, playerScrollpane, gameDate, JOptionPane.PLAIN_MESSAGE);//display report 
+               JOptionPane.showMessageDialog(null, playerScrollpane, gameDate, JOptionPane.PLAIN_MESSAGE);//display single game day average report
             }
             reader.close();// closes the file
         }
-        //
+        //end KJC
     }
     
     // this method gets executed when the Clear button in the Insert Stats frame is clicked

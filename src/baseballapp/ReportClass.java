@@ -7,8 +7,9 @@ This class creates a report based on the information written to the game file.
 package baseballapp;
 
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.*;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 public class ReportClass{
@@ -16,7 +17,7 @@ public class ReportClass{
     private File playerReportFile = null;
     private final int FIELD_SPACE_STATS = 7;
     private final int FIELD_SPACE_NAME = 20;
-    private final String FIELD_SEP = "";
+    private final String FIELD_SEP = ",";
     String[] pathnames;
     private String filename;
     
@@ -35,7 +36,7 @@ public class ReportClass{
     public void createHeader(){
         //Create header for report
          StringBuilder title = new StringBuilder();
-         title.append(StringUtil.pad("Last Name,",FIELD_SEP,FIELD_SPACE_NAME))
+         title.append(StringUtil.pad("Last Name",FIELD_SEP,FIELD_SPACE_NAME))
             .append(StringUtil.pad("First Name",FIELD_SEP,FIELD_SPACE_NAME))
             .append(StringUtil.pad("ab",FIELD_SEP,FIELD_SPACE_STATS))
             .append(StringUtil.pad("r",FIELD_SEP,FIELD_SPACE_STATS))
@@ -56,10 +57,6 @@ public class ReportClass{
             .append(StringUtil.pad("slg",FIELD_SEP,FIELD_SPACE_STATS))
             .append(StringUtil.pad("obp",FIELD_SEP,FIELD_SPACE_STATS));
        
-       StringBuilder d = new StringBuilder();
-       for(int i=0;i<150;i++)
-           d.append("-");
-        
         try {
             if(Files.notExists(playerReportPath)){
                 System.out.println("************************");
@@ -78,8 +75,6 @@ public class ReportClass{
                               new BufferedWriter(
                               new FileWriter(playerReportFile, true)))) {
             out.println(title);
-            out.println(d);
-            out.println();
             out.close();
         } catch (IOException e){
             System.out.println(e);
@@ -119,11 +114,17 @@ public class ReportClass{
         
         double onBasePercent = (hits + bb + hbp) / (ab + bb + hbp + sf);
         
+        BigDecimal bat = new BigDecimal(batAvg).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal slug = new BigDecimal(sPercent).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal ob = new BigDecimal(onBasePercent).setScale(2, RoundingMode.HALF_UP);
         
+        String batAvgS = bat.toString();
+        String sPercentS = slug.toString();
+        String onBasePercentS = ob.toString();
         
         //append all stats
         StringBuilder batterStatsIn = new StringBuilder();
-        batterStatsIn.append(StringUtil.pad(lName + ",",FIELD_SEP,FIELD_SPACE_NAME));
+        batterStatsIn.append(StringUtil.pad(lName,FIELD_SEP,FIELD_SPACE_NAME));
         batterStatsIn.append(StringUtil.pad(fName,FIELD_SEP,FIELD_SPACE_NAME));
         batterStatsIn.append(StringUtil.pad(Integer.toString((int)ab), FIELD_SEP,FIELD_SPACE_STATS));
         batterStatsIn.append(StringUtil.pad(Integer.toString(r), FIELD_SEP,FIELD_SPACE_STATS));
@@ -139,16 +140,16 @@ public class ReportClass{
         batterStatsIn.append(StringUtil.pad(Integer.toString(lob), FIELD_SEP,FIELD_SPACE_STATS));
         batterStatsIn.append(StringUtil.pad(Integer.toString((int)sf), FIELD_SEP,FIELD_SPACE_STATS));
         batterStatsIn.append(StringUtil.pad(Integer.toString((int)hbp), FIELD_SEP,FIELD_SPACE_STATS));
-        batterStatsIn.append(StringUtil.pad(Double.toString(batAvg), FIELD_SEP,FIELD_SPACE_STATS));
+        batterStatsIn.append(StringUtil.pad(batAvgS, FIELD_SEP,FIELD_SPACE_STATS));
         batterStatsIn.append(StringUtil.pad(Double.toString((int)tBases), FIELD_SEP,FIELD_SPACE_STATS));
-        batterStatsIn.append(StringUtil.pad(Double.toString(sPercent), FIELD_SEP,FIELD_SPACE_STATS));
-        batterStatsIn.append(StringUtil.pad(Double.toString(onBasePercent), FIELD_SEP,FIELD_SPACE_STATS));
+        batterStatsIn.append(StringUtil.pad(sPercentS, FIELD_SEP,FIELD_SPACE_STATS));
+        batterStatsIn.append(StringUtil.pad(onBasePercentS, FIELD_SEP,FIELD_SPACE_STATS));
         
         //write to file
         try(PrintWriter out = new PrintWriter(
                               new BufferedWriter(
                               new FileWriter(playerReportFile, true)))) {
-            out.println(batterStatsIn + "\n");
+            out.println(batterStatsIn);
             out.close();
         } catch (IOException e){
             System.out.println(e);
