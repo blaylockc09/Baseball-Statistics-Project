@@ -466,6 +466,16 @@ public class BaseballApp extends JFrame{
         JDialog readFrame= new JDialog();
         readFrame.setTitle("Read Stats");
         readFrame.setDefaultCloseOperation(readFrame.DISPOSE_ON_CLOSE);
+        
+        JLabel heading = new JLabel("Select a file to read the data -> ");
+        heading.setFont(new Font("Arial", Font.BOLD, 15));
+        
+        // creates a panel for the heading
+        JPanel headingPanel = new JPanel(new GridBagLayout());
+        headingPanel.add(heading, getConstraints(0, 5));
+        headingPanel.setPreferredSize(new Dimension(240,130));
+        headingPanel.setMinimumSize(new Dimension(240, 130));
+        readFrame.getContentPane().add(headingPanel);
                 
         // creates the buttons
         JButton readDataButton = new JButton("Read Data");
@@ -492,6 +502,7 @@ public class BaseballApp extends JFrame{
         
         // creates a panel for the text area
         JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         games = new ArrayList<>();
         
         File folder = new File("./games");
@@ -503,7 +514,7 @@ public class BaseballApp extends JFrame{
             games.add(pathname);
         }     
         b = new JList(games.toArray());
-        b.setPreferredSize(new Dimension(300, 200));
+        b.setPreferredSize(new Dimension(300, 220));
         b.setSelectedIndex(0);
         panel.add(b);
         
@@ -513,14 +524,15 @@ public class BaseballApp extends JFrame{
         
         // adds the above text area and button panel to the specified position
         JScrollPane scroll = new JScrollPane(b, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.setPreferredSize(new Dimension(300, 200));
         panel.add(scroll);
         
         // adds the above text area and button panel to the specified position
-        readFrame.add(panel, BorderLayout.NORTH);
+        readFrame.add(panel, BorderLayout.EAST);
         readFrame.add(buttonPanel, BorderLayout.SOUTH);
         
         
-        readFrame.setMinimumSize(new Dimension(340, 200));
+        readFrame.setMinimumSize(new Dimension(580, 300));
         readFrame.setVisible(true);
         readFrame.pack();
         // displays the window in the center 
