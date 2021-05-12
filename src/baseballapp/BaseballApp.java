@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -329,7 +328,7 @@ public class BaseballApp extends JFrame{
             }
             reader.close();// closes the file
         }
-        //
+        //end KJC
     }
     
     // this method gets executed when the Clear button in the Insert Stats frame is clicked
