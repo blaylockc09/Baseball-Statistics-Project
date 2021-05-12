@@ -41,7 +41,6 @@ public class BaseballApp extends JFrame{
     private JTextField hrField;
     private JTextField sfField;
     private JTextField hbpField;
-    private JTextArea statsTextArea;
     private BufferedImage image;
     //private FileClass file = new FileClass();
     private JList b;
@@ -191,27 +190,7 @@ public class BaseballApp extends JFrame{
         // exits the application 
         System.exit(0);
     }
-    
-    /* this method gets executed when the "Open File" button is clicked 
-    *  both, the insert stats frame and in the read stats frame
-    */
-    private void fileButtonClicked() {
-        // creates a file chooser
-        JFileChooser fileChooser = new JFileChooser();
-        // sets the default directory to the current directory
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
-        // adds another options that allows to choose only .txt files
-        FileNameExtensionFilter restrict = new FileNameExtensionFilter("Only .txt files", "txt");
-        fileChooser.setFileFilter(restrict);
-        int result = fileChooser.showOpenDialog(this);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            //ArrayList<String> batter = new ArrayList<>();
-            File selectedFile = fileChooser.getSelectedFile();            
-            String selectedFileName = selectedFile.getName();                    
-            System.out.println("Selected file: " + selectedFileName);
-        }
-    }
-    
+       
     // this method gets executed when the "Insert Data" button is clicked in the Insert Stats frame
     private void insertDataButtonClicked() {
         if (nameField.getText().isEmpty()){
@@ -352,15 +331,7 @@ public class BaseballApp extends JFrame{
         sfField.setText("");
         hbpField.setText("");
     }
-    
-    // this method gets executed when the Clear button in the Read Stats frame is clicked
-    private void clearDataButtonClicked(){
-        // clears the text area
-        statsTextArea.setText("");
-    }
-    
-    
-    
+             
     // creates a frame that is used to insert stats to a file
     private void insertData(){
         // creates a frame
@@ -424,13 +395,11 @@ public class BaseballApp extends JFrame{
         hbpField.setMinimumSize(dim);
         
         // Creates the buttons
-        JButton fileButton = new JButton("Open a File");
         JButton insertDataButton = new JButton("Insert Data");
         JButton clearButton = new JButton("Clear");
         JButton exitButton = new JButton("Exit");
 
         // Attahces the action listener to the buttons
-        fileButton.addActionListener(e -> fileButtonClicked());
         insertDataButton.addActionListener(e -> insertDataButtonClicked());
         clearButton.addActionListener(e -> clearButtonClicked());
         exitButton.addActionListener(e -> insertFrame.dispose());
@@ -438,7 +407,6 @@ public class BaseballApp extends JFrame{
         // button panel
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        buttonPanel.add(fileButton);
         buttonPanel.add(insertDataButton);
         buttonPanel.add(clearButton);
         buttonPanel.add(exitButton);
@@ -480,8 +448,8 @@ public class BaseballApp extends JFrame{
         panel.add(hbpField, getConstraints(1, 15)); 
 
         // adds the textField panel and the button panel in the specified position
-        add(panel, BorderLayout.CENTER);
-        add(buttonPanel, BorderLayout.SOUTH);
+        jnsertFrame.add(panel, BorderLayout.CENTER);
+        insertFrame.add(buttonPanel, BorderLayout.SOUTH);
         
         
         insertFrame.setMinimumSize(new Dimension(420, 425));
@@ -500,13 +468,10 @@ public class BaseballApp extends JFrame{
         readFrame.setDefaultCloseOperation(readFrame.DISPOSE_ON_CLOSE);
                 
         // creates the buttons
-        JButton fileButton = new JButton("Open a File");
         JButton readDataButton = new JButton("Read Data");
-        JButton clearButton = new JButton("Clear");
         JButton exitButton = new JButton("Exit");
         JList gamesList = new JList();
         // attaches the action listener to the buttons
-        fileButton.addActionListener(e -> fileButtonClicked());
         readDataButton.addActionListener(e -> {
             try {
                 
@@ -516,26 +481,16 @@ public class BaseballApp extends JFrame{
                 Logger.getLogger(BaseballApp.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        clearButton.addActionListener(e -> clearDataButtonClicked());
         exitButton.addActionListener(e -> readFrame.dispose());
 
         // button panel
-        JPanel buttonPanel = new JPanel(new GridBagLayout());
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         // displays the buttons at the specified position
-        buttonPanel.add(fileButton, getConstraints(4, 0));
-        buttonPanel.add(readDataButton, getConstraints(4, 1));
-        buttonPanel.add(clearButton, getConstraints(4, 2));
-        buttonPanel.add(exitButton, getConstraints(4, 3));
+        buttonPanel.add(readDataButton);
+        buttonPanel.add(exitButton);
         
         // creates a panel for the text area
-        JPanel panel = new JPanel();
-        Dimension itemDim = new Dimension(1500, 1500);
-        statsTextArea = new JTextArea(17,35);
-        statsTextArea.setLineWrap(true);
-        statsTextArea.setWrapStyleWord(true);
-        statsTextArea.setEditable(false); // sets the text area to not editable
-        statsTextArea.setPreferredSize(itemDim);
-        statsTextArea.setMinimumSize(itemDim);
         games = new ArrayList<>();
         
         File folder = new File("./games");
@@ -555,17 +510,16 @@ public class BaseballApp extends JFrame{
         
         //System.out.println(gameSelected);
         
-        // creates a scroll pane and adds it to the statsTextArea
-        
+        // adds the above text area and button panel to the specified position
         JScrollPane scroll = new JScrollPane(b, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         panel.add(scroll);
-
+        
         // adds the above text area and button panel to the specified position
-        readFrame.add(panel, BorderLayout.WEST);
-        readFrame.add(buttonPanel, BorderLayout.EAST);
+        readFrame.add(panel, BorderLayout.NORTH);
+        readFrame.add(buttonPanel, BorderLayout.SOUTH);
         
         
-        readFrame.setMinimumSize(new Dimension(490, 380));
+        readFrame.setMinimumSize(new Dimension(340, 200));
         readFrame.setVisible(true);
         readFrame.pack();
         // displays the window in the center 
