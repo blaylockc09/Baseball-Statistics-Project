@@ -317,19 +317,61 @@ public class BaseballApp extends JFrame{
             jt.setModel(model);//set to created model
             jt.setEnabled(false);//disallow user to click on or edit any data.
             
-            JScrollPane playerScrollpane = new JScrollPane(jt);//add list to scrollpane
-            playerScrollpane.setPreferredSize(new Dimension(1500,250));//add size for scrollpane
             JScrollPane playerAvgScrollpane = new JScrollPane();//placeholder for averages scrollpane.
             if(selectedFiles.size() > 1){
                 JOptionPane.showMessageDialog(null, playerAvgScrollpane, gameDate, JOptionPane.PLAIN_MESSAGE);//display mulitple game average report
             }
             else{
-               JOptionPane.showMessageDialog(null, playerScrollpane, gameDate, JOptionPane.PLAIN_MESSAGE);//display single game day average report
+               tableViewPrint(jt, gameDate.substring(0,10));//passes to allow for table printing.
             }
             reader.close();// closes the file
         }
         //end KJC
     }
+   
+    //added 5/12 KJC
+    //function accepts table and string parameters to create a dialog for viewing and printing the table created in readFileButtonClicked()
+    private void tableViewPrint(JTable jt, String date){
+        JDialog tableDialog = new JDialog();
+        tableDialog.setTitle(date);//title of the dialog is the date of the game
+        tableDialog.setDefaultCloseOperation(tableDialog.DISPOSE_ON_CLOSE);
+        JScrollPane playerScrollpane = new JScrollPane(jt);//add table to scrollpane
+        playerScrollpane.setPreferredSize(new Dimension(1500,250));//add size for scrollpane
+        
+        JButton exitButton = new JButton("Exit");
+        exitButton.addActionListener(e -> tableDialog.dispose());
+        
+        //attempts to print the file, allows user to exit.
+        JButton printButton = new JButton("Print");
+        printButton.addActionListener(e -> {
+            try {
+                if (!jt.print()){
+                    JOptionPane.showMessageDialog(null, "User cancelled printing.", "Error", JOptionPane.ERROR_MESSAGE);//user cancelled printing.
+                }
+            }
+            catch (java.awt.print.PrinterException err){
+                JOptionPane.showMessageDialog(null, err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);//there was an error printing.
+            }
+        });
+        
+        // button panel
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.add(printButton);
+        buttonPanel.add(exitButton);
+        
+        //scrollpane panel
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+        panel.add(playerScrollpane, getConstraints(0, 0));
+        tableDialog.add(panel, BorderLayout.CENTER);
+        tableDialog.add(buttonPanel, BorderLayout.SOUTH);
+        tableDialog.setMinimumSize(new Dimension(1500, 250));
+        tableDialog.setVisible(true);
+        tableDialog.pack();
+        tableDialog.setLocationRelativeTo(null);//display in center.
+    }
+    //end KJC
     
     // this method gets executed when the Clear button in the Insert Stats frame is clicked
     private void clearButtonClicked() {
