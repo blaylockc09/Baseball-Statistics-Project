@@ -406,7 +406,7 @@ public class BaseballApp extends JFrame{
         JButton exitButton = new JButton("Exit");
 
         // Attahces the action listener to the buttons
-        insertDataButton.addActionListener(e -> insertDataButtonClicked());
+        insertDataButton.addActionListener(e -> {insertDataButtonClicked(); insertFrame.dispose();});// -KJC added dispose to close frame after data is entered.
         clearButton.addActionListener(e -> clearButtonClicked());
         exitButton.addActionListener(e -> insertFrame.dispose());
 
