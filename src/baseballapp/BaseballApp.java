@@ -16,6 +16,7 @@ import javax.swing.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -177,7 +178,12 @@ public class BaseballApp extends JFrame{
     
     // this method gets executed when the "Read Stats" button is clicked
     private void readButtonClicked() {
-        readData();           
+        try{
+        readData();
+        }
+        catch(NullPointerException e){
+            JOptionPane.showMessageDialog(null, "Please insert data first.");
+        }
     }
     
     // this method gets executed when the "Help" button is clicked
@@ -195,41 +201,63 @@ public class BaseballApp extends JFrame{
     }
        
     // this method gets executed when the "Insert Data" button is clicked in the Insert Stats frame
-    private void insertDataButtonClicked() {
+    private void insertDataButtonClicked(JDialog insertFrame) {
+        //added 5-14 - KJC
+        boolean isValid = false;
+        while(!isValid){
+            try{
+                LocalDate.parse(dateField.getText());
+                isValid=true;
+            }
+            catch(DateTimeParseException err){
+                JOptionPane.showMessageDialog(insertFrame, "The date field is either in the wrong format or is empty.\nThe correct format is yyyy/mm/dd.", "Date Entry" ,JOptionPane.ERROR_MESSAGE);
+                dateField.setText("");
+                return;
+            }
+        }
+        //
         if (nameField.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "The Name field is empty.");
-        }else if (dateField.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "The Date field is empty.");
-        } else if (abField.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "The At Bat field is empty.");
-        } else if (rField.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "The Runs field is empty.");
+            JOptionPane.showMessageDialog(insertFrame, "The Name field is empty.", "Error" ,JOptionPane.ERROR_MESSAGE);//made these boxes look like errors. -KJC 5-14
+        }
+        //added 5-14 - KJC / Chris
+        else if(!nameField.getText().contains(" ")){
+            JOptionPane.showMessageDialog(insertFrame, "Please insert both a first and a last name.", "Error" ,JOptionPane.ERROR_MESSAGE);
+        }
+        //
+        else if (abField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(insertFrame, "The At Bat field is empty.", "Error" ,JOptionPane.ERROR_MESSAGE);//made these boxes look like errors. -KJC 5-14
+        } else if(abField.getText().equals("0")){ 
+            JOptionPane.showMessageDialog(insertFrame, "The At Bat field cannot be zero.", "Error" ,JOptionPane.ERROR_MESSAGE);//made these boxes look like errors. -KJC 5-14
+        }
+        else if (rField.getText().isEmpty()){
+            JOptionPane.showMessageDialog(insertFrame, "The Runs field is empty.", "Error" ,JOptionPane.ERROR_MESSAGE);//made these boxes look like errors. -KJC 5-14
         } else if (hField.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "The 1 Base Hit field is empty.");
+            JOptionPane.showMessageDialog(insertFrame, "The 1 Base Hit field is empty.", "Error" ,JOptionPane.ERROR_MESSAGE);//made these boxes look like errors. -KJC 5-14
         } else if (h2Field.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "The 2 Base Hit field is empty.");
+            JOptionPane.showMessageDialog(insertFrame, "The 2 Base Hit field is empty.", "Error" ,JOptionPane.ERROR_MESSAGE);//made these boxes look like errors. -KJC 5-14
         } else if (h3Field.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "The 3 Base Hit field is empty.");
+            JOptionPane.showMessageDialog(insertFrame, "The 3 Base Hit field is empty.", "Error" ,JOptionPane.ERROR_MESSAGE);//made these boxes look like errors. -KJC 5-14
         } else if (hrField.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "The Homerun field is empty.");
+            JOptionPane.showMessageDialog(insertFrame, "The Homerun field is empty.", "Error" ,JOptionPane.ERROR_MESSAGE);//made these boxes look like errors. -KJC 5-14
         } else if (rbiField.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "The Runs Batetd In field is empty.");
+            JOptionPane.showMessageDialog(insertFrame, "The Runs Batetd In field is empty.", "Error" ,JOptionPane.ERROR_MESSAGE);//made these boxes look like errors. -KJC 5-14
         } else if (bbField.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "The Walk field is empty.");
+            JOptionPane.showMessageDialog(insertFrame, "The Walk field is empty.", "Error" ,JOptionPane.ERROR_MESSAGE);//made these boxes look like errors. -KJC 5-14
         } else if (soField.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "The Strikeout field is empty.");
+            JOptionPane.showMessageDialog(insertFrame, "The Strikeout field is empty.", "Error" ,JOptionPane.ERROR_MESSAGE);//made these boxes look like errors. -KJC 5-14
         } else if (poField.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "The Putout field is empty.");
+            JOptionPane.showMessageDialog(insertFrame, "The Putout field is empty.", "Error" ,JOptionPane.ERROR_MESSAGE);//made these boxes look like errors. -KJC 5-14
         } else if (aField.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "The Assist field is empty.");
+            JOptionPane.showMessageDialog(insertFrame, "The Assist field is empty.", "Error" ,JOptionPane.ERROR_MESSAGE);//made these boxes look like errors. -KJC 5-14
         } else if (lobField.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "The Left on Base field is empty.");
+            JOptionPane.showMessageDialog(insertFrame, "The Left on Base field is empty.", "Error" ,JOptionPane.ERROR_MESSAGE);//made these boxes look like errors. -KJC 5-14
         } else if (sfField.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "The Sacrifice Fly field is empty.");
+            JOptionPane.showMessageDialog(insertFrame, "The Sacrifice Fly field is empty.", "Error" ,JOptionPane.ERROR_MESSAGE);//made these boxes look like errors. -KJC 5-14
         } else if (hbpField.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "The Hit-by-Pitch field is empty.");
-        } else {
-            Batter player = new Batter();
+            JOptionPane.showMessageDialog(insertFrame, "The Hit-by-Pitch field is empty.", "Error" ,JOptionPane.ERROR_MESSAGE);//made these boxes look like errors. -KJC 5-14
+        } 
+        else {
+           Batter player = new Batter();
             String[] name = nameField.getText().split(" ");
             String firstName = name[0];
             String lastName = name[1];
@@ -237,23 +265,30 @@ public class BaseballApp extends JFrame{
             player.setFirstName(firstName);
             player.setLastName(lastName);
             player.setDateOfGame(dateField.getText());
-            player.setab(Integer.parseInt(abField.getText()));
-            player.setr(Integer.parseInt(rField.getText()));
-            player.seth(Integer.parseInt(hField.getText()));
-            player.setH2(Integer.parseInt(h2Field.getText()));
-            player.setH3(Integer.parseInt(h3Field.getText()));
-            player.setHr(Integer.parseInt(hrField.getText()));
-            player.setrbi(Integer.parseInt(rbiField.getText()));
-            player.setbb(Integer.parseInt(bbField.getText()));
-            player.setso(Integer.parseInt(soField.getText()));
-            player.setpo(Integer.parseInt(poField.getText()));
-            player.seta(Integer.parseInt(aField.getText()));
-            player.setlob(Integer.parseInt(lobField.getText()));
-            player.setSf(Integer.parseInt(sfField.getText()));
-            player.setHbp(Integer.parseInt(hbpField.getText()));
-
-            FileClass file = new FileClass(player);
-            file.save(player);
+            //added for data validation -- KJC 5-14
+            try{
+                player.setab(Integer.parseInt(abField.getText()));
+                player.setr(Integer.parseInt(rField.getText()));
+                player.seth(Integer.parseInt(hField.getText()));
+                player.setH2(Integer.parseInt(h2Field.getText()));
+                player.setH3(Integer.parseInt(h3Field.getText()));
+                player.setHr(Integer.parseInt(hrField.getText()));
+                player.setrbi(Integer.parseInt(rbiField.getText()));
+                player.setbb(Integer.parseInt(bbField.getText()));
+                player.setso(Integer.parseInt(soField.getText()));
+                player.setpo(Integer.parseInt(poField.getText()));
+                player.seta(Integer.parseInt(aField.getText()));
+                player.setlob(Integer.parseInt(lobField.getText()));
+                player.setSf(Integer.parseInt(sfField.getText()));
+                player.setHbp(Integer.parseInt(hbpField.getText()));
+                FileClass file = new FileClass(player);
+                file.save(player);
+                insertFrame.dispose();
+            }
+            catch(NumberFormatException err){
+                JOptionPane.showMessageDialog(insertFrame, "Please use numbers for stats.", "Non-Numeric Entry" ,JOptionPane.ERROR_MESSAGE);//made these boxes look like errors. -KJC 5-14
+            }
+            //end KJC
         }
     }
     
@@ -291,7 +326,7 @@ public class BaseballApp extends JFrame{
                 while ((line = br.readLine()) != null){
                     report.writeReport(line);//write report to file -KJC
                 }
-            }finally { // closes the file after it is being read
+            }finally { // closes the file after it is read
                 br.close();
             }
 
@@ -320,13 +355,8 @@ public class BaseballApp extends JFrame{
                 jt.setModel(model);//set to created model
                 jt.setEnabled(false);//disallow user to click on or edit any data.
 
-                JScrollPane playerAvgScrollpane = new JScrollPane();//placeholder for averages scrollpane.
-                if(selectedFiles.size() > 1){
-                    JOptionPane.showMessageDialog(null, playerAvgScrollpane, gameDate, JOptionPane.PLAIN_MESSAGE);//display mulitple game average report
-                }
-                else{
-                   tableViewPrint(jt, gameDate.substring(0,10));//passes to allow for table printing.
-                }
+                tableViewPrint(jt, gameDate.substring(0,10));//passes to allow for table printing.
+                
                 reader.close();// closes the file
             }
             //end KJC
@@ -578,7 +608,7 @@ public class BaseballApp extends JFrame{
         JButton exitButton = new JButton("Exit");
 
         // Attahces the action listener to the buttons
-        insertDataButton.addActionListener(e -> {insertDataButtonClicked(); insertFrame.dispose();});// -KJC added dispose to close frame after data is entered.
+        insertDataButton.addActionListener(e -> {insertDataButtonClicked(insertFrame);});// -KJC added dispose to close frame after data is entered.
         clearButton.addActionListener(e -> clearButtonClicked());
         exitButton.addActionListener(e -> insertFrame.dispose());
 
