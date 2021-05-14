@@ -220,5 +220,10 @@ public class Batter
     {
         return lob;
     }
+    
+    @Override
+        public String toString() {
+            return this.getFirstName() + "," + this.getLastName();
+        }
    
 }
