@@ -1,0 +1,5 @@
+Last Name           ,First Name          ,ab     ,r      ,1bh    ,2bh    ,3bh    ,hr     ,rbi    ,bb     ,so     ,po     ,a      ,lob    ,sf     ,hbp    ,ba     ,tb     ,slg    ,obp    ,
+Blaylock            ,Chris               ,9      ,3      ,2      ,5      ,3      ,9      ,4      ,32     ,9      ,23     ,8      ,6      ,12     ,4      ,2.11   ,57.0   ,6.33   ,0.96   ,
+Carden              ,Kearstin            ,10     ,2      ,3      ,2      ,1      ,1      ,0      ,1      ,0      ,0      ,0      ,0      ,1      ,1      ,0.70   ,14.0   ,1.40   ,0.69   ,
+Carden              ,Kearstin            ,10     ,2      ,3      ,2      ,1      ,1      ,0      ,1      ,0      ,0      ,0      ,0      ,1      ,1      ,0.70   ,14.0   ,1.40   ,0.69   ,
+Carden              ,Kearstin            ,10     ,2      ,3      ,2      ,1      ,1      ,0      ,1      ,0      ,0      ,0      ,0      ,1      ,1      ,0.70   ,14.0   ,1.40   ,0.69   ,

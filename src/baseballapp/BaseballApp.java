@@ -6,21 +6,19 @@ Date: 05/03/2021
 package baseballapp;
 import static baseballapp.FileClass.games;
 import java.awt.*;
+import java.util.*;
+import java.util.List;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
+import javax.swing.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.*;
 import javax.imageio.ImageIO;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 // BaseballApp class extends the JFrame Class
@@ -43,6 +41,10 @@ public class BaseballApp extends JFrame{
     private JTextField sfField;
     private JTextField hbpField;
     private BufferedImage image;
+    
+    private final int FIELD_SPACE_STATS = 7;
+    private final int FIELD_SPACE_NAME = 20;
+    private final String FIELD_SEP = ",";
     //private FileClass file = new FileClass();
     private JList b;
     String gameSelected = "";
@@ -257,76 +259,190 @@ public class BaseballApp extends JFrame{
     
     // reads a file when the Read File button is clicked
     private void readFileButtonClicked() throws FileNotFoundException, IOException {
-        String selectedFile = "./games/" + (String) b.getSelectedValue();
+        String selectedFile = "./games/" + (String) b.getSelectedValue();// Chris Blaylock 5/14/21
         // put all filenames into and arraylist so that we can read multiple files - cjb 
-        ArrayList selectedFiles = (ArrayList) b.getSelectedValuesList();
+        ArrayList selectedFiles = (ArrayList) b.getSelectedValuesList();// Chris Blaylock 5/14/21
         String gameDate = (String) b.getSelectedValue();
         // write selected files to average.txt so that we can use it to make a report for multiple games
-        FileWriter pw = new FileWriter("average.txt");
+        String tempAverage = "average.txt";// Chris Blaylock 5/14/21
+        FileWriter pw = new FileWriter(tempAverage);
         // loop through the selected games
-        for (Object selectedFilei : selectedFiles) {
+        for (Object selectedFilei : selectedFiles) {// Chris Blaylock 5/14/21
             String file = "./games/" + selectedFilei; // we have to add the games directory here
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line = br.readLine();
-            while (line != null)
+            BufferedReader br = new BufferedReader(new FileReader(file));// Chris Blaylock 5/14/21
+            String line = br.readLine();// Chris Blaylock 5/14/21
+            while (line != null)// Chris Blaylock 5/14/21
             {
                 pw.write(line + "\n"); // write to the average file
-                line = br.readLine();
+                line = br.readLine();// Chris Blaylock 5/14/21
             }
         }
         // closing resources    
-        pw.flush();
-        pw.close();
-        
-        // start reports
-        BufferedReader br = new BufferedReader(new FileReader(selectedFile));//added 5/6 - KJC
-        String passFile = (String) b.getSelectedValue(); // added 5/5 -KJC
-        ReportClass report = new ReportClass(passFile); //added 5/5 -KJC
-        try {
-            report.createHeader();//create header outside of loop to maintain -KJC
+        pw.flush();// Chris Blaylock 5/14/21
+        pw.close();// Chris Blaylock 5/14/21
+        if (selectedFiles.size() <= 1){// Chris Blaylock 5/14/21
+            // start reports
+            BufferedReader br = new BufferedReader(new FileReader(selectedFile));//added 5/6 - KJC
+            String passFile = (String) b.getSelectedValue(); // added 5/5 -KJC
+            ReportClass report = new ReportClass(passFile); //added 5/5 -KJC
+            try {
+                report.createHeader();//create header outside of loop to maintain -KJC
+                String line;
+                while ((line = br.readLine()) != null){
+                    report.writeReport(line);//write report to file -KJC
+                }
+            }finally { // closes the file after it is being read
+                br.close();
+            }
+
+            //added 5/6 - KJC
+            //updated 5/12 - KJC --Report now displays in a JTable
+
+            String selectedReport = "./reports/" + gameDate.substring(0,10) + "_Report.txt";
+            BufferedReader reader = new BufferedReader(new FileReader(selectedReport));
+            DefaultTableModel model = new DefaultTableModel();//create table model to display report
+            try {
+                String line1;
+                //create title
+                String l = reader.readLine();
+                String[] titles = l.split(",");
+
+                for(String t : titles){
+                    model.addColumn(t);//add to model for JTable (titles)
+                }
+                while ((line1 = reader.readLine()) != null){
+                    String[] data = line1.split(",");
+                    model.addRow(data);//add to model for JTable (data)
+                }
+            }finally { 
+
+                JTable jt = new JTable();//create JTable
+                jt.setModel(model);//set to created model
+                jt.setEnabled(false);//disallow user to click on or edit any data.
+
+                JScrollPane playerAvgScrollpane = new JScrollPane();//placeholder for averages scrollpane.
+                if(selectedFiles.size() > 1){
+                    JOptionPane.showMessageDialog(null, playerAvgScrollpane, gameDate, JOptionPane.PLAIN_MESSAGE);//display mulitple game average report
+                }
+                else{
+                   tableViewPrint(jt, gameDate.substring(0,10));//passes to allow for table printing.
+                }
+                reader.close();// closes the file
+            }
+            //end KJC
+        }
+        else{
+            // Chris Blaylock 5/14/21
+            //Write all the selected files to one file
+            BufferedReader br = new BufferedReader(new FileReader("average.txt")); 
+            List<String[]> allBatters = new ArrayList<>();
             String line;
-            while ((line = br.readLine()) != null){
-                report.writeReport(line);//write report to file -KJC
+            //create a Treemap so that we can map out our data and sort it
+            Map<String, ArrayList<Double>> batterMap = new TreeMap<>();
+            try {
+                int count = 1;
+                // read everyline and assign a variable 
+                while ((line = br.readLine()) != null){
+                    String[] batter = line.split(",");
+                    String  lName = batter[0].trim();
+                    String  fName = batter[1].trim();
+                    String fullName = lName+" "+fName;
+                    double ab = Double.parseDouble(batter[2].trim());
+                    double r = Integer.parseInt(batter[3].trim());
+                    double h = Double.parseDouble(batter[4].trim());
+                    double h2 = Double.parseDouble(batter[5].trim());
+                    double h3 = Double.parseDouble(batter[6].trim());
+                    double hr = Double.parseDouble(batter[7].trim());
+                    double rbi = Integer.parseInt(batter[8].trim());
+                    double bb = Double.parseDouble(batter[9].trim());
+                    double so = Integer.parseInt(batter[10].trim());
+                    double po = Integer.parseInt(batter[11].trim());
+                    double a = Integer.parseInt(batter[12].trim());
+                    double lob = Integer.parseInt(batter[13].trim());
+                    double sf = Double.parseDouble(batter[14].trim());
+                    double hbp = Double.parseDouble(batter[15].trim());
+                    double hits = h + h2 + h3 + hr;//total hits
+                    double batAvg = hits/ab;
+                    double tBases = h + (2 * h2) + (3 * h3) + (4 * hr);
+                    double sPercent = tBases / ab;
+                    double onBasePercent = (hits + bb + hbp) / (ab + bb + hbp + sf);
+                    String keyToBeChecked = fullName;
+                    
+                    // this will check if the first and last name is present in our treemap 
+                    boolean isKeyPresent = batterMap.containsKey(keyToBeChecked);
+                    // if the name exists we will average the values
+                    if (isKeyPresent){
+                        ArrayList<Double> averages =  new ArrayList<>(Arrays.asList(ab,r,h,h2,h3,hr,rbi,bb,so,po,a,lob,sf,hbp));
+                        ArrayList<Double> toBeAveraged = batterMap.get(fullName);
+                        //System.out.println(keyToBeChecked + " " + averages);
+                        
+                        int length = averages.size();
+                        if (length != toBeAveraged.size()) { // Too many names, or too many numbers
+                            // Fail
+                        }
+                        ArrayList<Double> array3 = new ArrayList<>(length); // Make a new list
+                        for (int i = 0; i < length; i++) { // Loop through every name/stat combo
+                            array3.add(averages.get(i) + toBeAveraged.get(i)/2); 
+                        }
+                        batterMap.put(fullName,array3); 
+                        
+                    // if it does not exist we will put that key value pair in our treemap   
+                    }else{
+                        batterMap.put(fullName, new ArrayList<>(Arrays.asList(ab,r,h,h2,h3,hr,rbi,bb,so,po,a,lob,sf,hbp))); 
+                    }
+
+                    allBatters.add(batter);    
+                    count += 1;   
+                }
+                // create the panel that will display the report
+                String firstDate = (String) selectedFiles.get(0);// get the first date selected
+                String lastDate = (String) selectedFiles.get(selectedFiles.size() - 1);// get the last date selected
+                String outputFilePath = "./reports/" + firstDate.replace(".txt", "-") + lastDate;// combine the dates to create one file name 
+                File file = new File(outputFilePath);
+                
+                // Oh look another BufferedWriter, how cool.....
+                BufferedWriter bf = null;
+                try{
+            
+                        //create new BufferedWriter for the output file
+                        bf = new BufferedWriter( new FileWriter(file) );
+                        
+                        //iterate map entries
+                        for(Map.Entry<String, ArrayList<Double>> entry : batterMap.entrySet()){
+
+                            //put key and value separated by a colon
+                            bf.write( entry.getKey() + ":" + entry.getValue() );
+
+                            //new line
+                            bf.newLine();
+                        }
+
+                        bf.flush();
+
+                    }catch(IOException e){
+                        e.printStackTrace();
+                    }
+                // these will be used as the columns for our reports
+                String[] columns = new String[] {"Name","At Bat","Runs","Hits","2 Base Hit ","3 Base Hit ","Home Run","Runners Batted In","Walk","Strike Out","Put Out","Assist","Left On Base","Sacrifice Fly","Hit-by-pitch"};//
+                DefaultTableModel defaultModel = new DefaultTableModel(columns, 0);
+                // create a JTable for the average table
+                JTable averageTable = new JTable(defaultModel);
+                
+                averageTable.setEnabled(false);//disallow user to click on or edit any data.
+                // assign our tree map to columns on our average table
+                batterMap.entrySet().forEach(entry -> {
+                    ArrayList<Double> stats = entry.getValue();
+                    defaultModel.addRow(new Object[] {entry.getKey(), stats.get(0),stats.get(1),stats.get(2),stats.get(3),stats.get(4),stats.get(5),
+                        stats.get(6),stats.get(7),stats.get(8),stats.get(9),stats.get(10),stats.get(11),stats.get(12),stats.get(13)
+                    });
+                });
+                // display the table view 
+                tableViewPrint(averageTable , outputFilePath.substring(10).replace(".txt", " ") + "Average Stats");
+            }finally { 
+                // close resource
+                br.close();
             }
-        }finally { // closes the file after it is being read
-            br.close();
         }
-        
-        //added 5/6 - KJC
-        //updated 5/12 - KJC --Report now displays in a JTable
-        
-        String selectedReport = "./reports/" + gameDate.substring(0,10) + "_Report.txt";
-        BufferedReader reader = new BufferedReader(new FileReader(selectedReport));
-        DefaultTableModel model = new DefaultTableModel();//create table model to display report
-        try {
-            String line1;
-            //create title
-            String l = reader.readLine();
-            String[] titles = l.split(",");
-            
-            for(String t : titles){
-                model.addColumn(t);//add to model for JTable (titles)
-            }
-            while ((line1 = reader.readLine()) != null){
-                String[] data = line1.split(",");
-                model.addRow(data);//add to model for JTable (data)
-            }
-        }finally { 
-            
-            JTable jt = new JTable();//create JTable
-            jt.setModel(model);//set to created model
-            jt.setEnabled(false);//disallow user to click on or edit any data.
-            
-            JScrollPane playerAvgScrollpane = new JScrollPane();//placeholder for averages scrollpane.
-            if(selectedFiles.size() > 1){
-                JOptionPane.showMessageDialog(null, playerAvgScrollpane, gameDate, JOptionPane.PLAIN_MESSAGE);//display mulitple game average report
-            }
-            else{
-               tableViewPrint(jt, gameDate.substring(0,10));//passes to allow for table printing.
-            }
-            reader.close();// closes the file
-        }
-        //end KJC
     }
    
     //added 5/12 KJC
