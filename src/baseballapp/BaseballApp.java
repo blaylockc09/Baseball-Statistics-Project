@@ -675,12 +675,18 @@ public class BaseballApp extends JFrame{
         readFrame.setTitle("Read Stats");
         readFrame.setDefaultCloseOperation(readFrame.DISPOSE_ON_CLOSE);
         
-        JLabel heading = new JLabel("Select a file to read the data -> ");
+        JLabel heading = new JLabel("Select a file to read the data.");
+        JLabel subHeading1 = new JLabel("Hold CTRL to select multiple files");
+        JLabel subHeading2 = new JLabel("and see averages.");
         heading.setFont(new Font("Arial", Font.BOLD, 15));
+        subHeading1.setFont(new Font("Arial", Font.BOLD, 15));
+        subHeading2.setFont(new Font("Arial", Font.BOLD, 15));
         
         // creates a panel for the heading
         JPanel headingPanel = new JPanel(new GridBagLayout());
         headingPanel.add(heading, getConstraints(0, 5));
+        headingPanel.add(subHeading1, getConstraints(0, 8));
+        headingPanel.add(subHeading2, getConstraints(0, 12));
         headingPanel.setPreferredSize(new Dimension(240,130));
         headingPanel.setMinimumSize(new Dimension(240, 130));
         readFrame.getContentPane().add(headingPanel);
